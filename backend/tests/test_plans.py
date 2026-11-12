@@ -62,6 +62,26 @@ def test_template_workout_plan_follows_gym_days_and_level(repo):
     assert sum(d.focus != "Rest" for d in home.days) == 3 and "home" in home.days[0].focus
 
 
+def test_gemini_failures_reach_the_client_as_short_reasons(repo):
+    """The raw SDK error (URLs, response bodies) must stay in the server log."""
+    import httpx
+    from google.genai.errors import ServerError
+    from unittest.mock import Mock
+    from types import SimpleNamespace
+
+    from app.config import get_settings
+    from app.services.plan_writer import GeminiPlanWriter
+
+    writer = GeminiPlanWriter(get_settings(), repo)
+    writer._timeout_s, writer._models = 9, ["a", "b"]
+    boom = ServerError(503, {"error": {"message": "secret internal detail https://example.internal/x"}})
+    writer._client = SimpleNamespace(models=SimpleNamespace(generate_content=Mock(side_effect=[httpx.ReadTimeout("t"), boom])))
+    with pytest.raises(PlanGenerationError) as err:
+        writer.write_workout(ProfileIn(**VEG))
+    assert str(err.value) == "Gemini 'a' did not answer within 9s; 'b' is overloaded right now (503). Try again in a moment."
+    assert "example.internal" not in str(err.value)
+
+
 def test_gemini_schema_is_openapi_subset():
     schema = _schema(DietPlanContent)
     assert schema["type"] == "OBJECT" and "$defs" not in schema

@@ -124,6 +124,22 @@ def _is_transient(exc: Exception) -> bool:
     return isinstance(exc, httpx.TransportError) or getattr(exc, "code", None) in TRANSIENT_HTTP_CODES
 
 
+def _failure_reason(exc: Exception, timeout_s: int) -> str:
+    """Short, safe wording for the client; the raw exception (URLs, response bodies) stays in the server log."""
+    code = getattr(exc, "code", None)
+    if isinstance(exc, httpx.TimeoutException) or code == 504:
+        return f"did not answer within {timeout_s}s"
+    if code == 503:
+        return "is overloaded right now (503)"
+    if code == 429:
+        return "hit its rate limit or quota (429)"
+    if code in (400, 401, 403):
+        return f"rejected the request ({code}); check GEMINI_API_KEY and GEMINI_MODEL"
+    if isinstance(exc, httpx.TransportError):
+        return "could not be reached (network error)"
+    return f"failed ({type(exc).__name__})"
+
+
 class GeminiPlanWriter:
     name = "gemini"
 
@@ -155,10 +171,10 @@ class GeminiPlanWriter:
                 self.last_model = model
                 return json.loads(response.text or "{}")
             except Exception as exc:
-                failures.append(f"'{model}': {type(exc).__name__} {str(exc)[:120]}")
+                failures.append(f"'{model}' {_failure_reason(exc, self._timeout_s)}")
+                logger.warning("Gemini plan model %s failed: %s", model, str(exc)[:500])
                 if not _is_transient(exc):
-                    raise PlanGenerationError(f"Gemini {failures[-1]}") from exc
-                logger.warning("Gemini plan %s; trying the next model if any.", failures[-1])
+                    raise PlanGenerationError(f"Gemini {failures[-1]}.") from exc
         raise PlanGenerationError("Gemini " + "; ".join(failures) + ". Try again in a moment.")
 
     def write_diet(self, profile: ProfileIn, targets: Targets) -> DietPlanContent:
@@ -166,14 +182,16 @@ class GeminiPlanWriter:
         try:
             return DietPlanContent.model_validate(data)
         except ValidationError as exc:
-            raise PlanGenerationError(f"Gemini returned an unusable diet plan: {str(exc)[:200]}") from exc
+            logger.warning("Gemini diet plan failed validation: %s", str(exc)[:500])
+            raise PlanGenerationError("Gemini returned an unusable diet plan. Try again.") from exc
 
     def write_workout(self, profile: ProfileIn) -> WorkoutPlanContent:
         data = self._ask(workout_prompt(profile), _schema(WorkoutPlanContent))
         try:
             return WorkoutPlanContent.model_validate(data)
         except ValidationError as exc:
-            raise PlanGenerationError(f"Gemini returned an unusable workout plan: {str(exc)[:200]}") from exc
+            logger.warning("Gemini workout plan failed validation: %s", str(exc)[:500])
+            raise PlanGenerationError("Gemini returned an unusable workout plan. Try again.") from exc
 
 
 # ── selection ────────────────────────────────────────────────────────────────
