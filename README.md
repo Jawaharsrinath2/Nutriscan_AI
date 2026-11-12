@@ -48,6 +48,14 @@ Meals, water and daily targets belong to the signed-in user (`/api/meals`, `/api
 `/api/nutrition` and `/api/scan` need a bearer token; the food catalogue is public). Databases created
 before accounts existed had shared tables; those are dropped and recreated per-user on startup.
 
+## Onboarding and targets
+
+After signup a six-step questionnaire (body stats, goal, activity, training, food preferences) feeds
+`backend/app/services/target_calculator.py`: Mifflin-St Jeor BMR × activity factor → maintenance,
+then the goal's deficit/surplus, protein per kg and fat share. The numbers are deterministic and
+unit-tested; AI never picks them. Targets can be overridden by hand on the Goals tab and restored
+with "Use formula". Profile edits (e.g. a weigh-in) recompute targets unless they were overridden.
+
 ## Photo detection
 
 The old app guessed dishes from file names and pixel colours, and its pins were hard-coded.

@@ -1,6 +1,6 @@
 from datetime import date, datetime
 
-from sqlalchemy import JSON, Date, DateTime, Float, Integer, String
+from sqlalchemy import JSON, Boolean, Date, DateTime, Float, Integer, String
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -60,6 +60,30 @@ class DailyGoals(Base):
     protein: Mapped[int] = mapped_column(Integer)
     carbs: Mapped[int] = mapped_column(Integer)
     fat: Mapped[int] = mapped_column(Integer)
+
+
+class UserProfile(Base):
+    """Onboarding answers; one row per user. Targets are derived from these (see target_calculator)."""
+
+    __tablename__ = "user_profiles"
+
+    user_id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    sex: Mapped[str] = mapped_column(String(10))
+    age: Mapped[int] = mapped_column(Integer)
+    height_cm: Mapped[float] = mapped_column(Float)
+    weight_kg: Mapped[float] = mapped_column(Float)
+    target_weight_kg: Mapped[float | None] = mapped_column(Float, nullable=True)
+    goal: Mapped[str] = mapped_column(String(16))  # lose | gain | strength
+    activity: Mapped[str] = mapped_column(String(16))  # desk | light | active | very_active
+    gym: Mapped[bool] = mapped_column(Boolean, default=False)
+    gym_days: Mapped[int] = mapped_column(Integer, default=0)
+    experience: Mapped[str | None] = mapped_column(String(16), nullable=True)  # beginner | intermediate | advanced
+    home_workouts: Mapped[bool] = mapped_column(Boolean, default=False)
+    diet_pref: Mapped[str] = mapped_column(String(16))  # veg | eggetarian | nonveg
+    avoid: Mapped[list] = mapped_column(JSON, default=list)
+    kcal_adjust: Mapped[int] = mapped_column(Integer, default=0)  # the ±200 nudge from the "Your numbers" step
+    onboarded_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
 
 class PasswordResetCode(Base):

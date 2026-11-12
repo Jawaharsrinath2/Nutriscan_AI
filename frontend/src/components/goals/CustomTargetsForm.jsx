@@ -23,10 +23,10 @@ export default function CustomTargetsForm() {
     );
 
   return (
-    <div className="lg:col-span-6 bg-white rounded-2xl border border-slate-200 shadow-sm p-5 space-y-5">
+    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 space-y-5">
       <div>
-        <h2 className="text-lg font-extrabold text-slate-900">Custom Daily Targets</h2>
-        <p className="text-xs text-slate-500">Fine-tune your exact daily calorie, protein, carb, and fat goals</p>
+        <h2 className="text-lg font-extrabold text-slate-900">Edit Targets by Hand</h2>
+        <p className="text-xs text-slate-500">Know better than the formula? Set your own numbers. "Use formula" on the card above brings them back.</p>
       </div>
 
       <div className="grid grid-cols-2 gap-4">

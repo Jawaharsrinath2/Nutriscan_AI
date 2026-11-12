@@ -10,6 +10,7 @@ import { useCamera } from "./hooks/useCamera";
 import AuthView from "./views/AuthView";
 import GoalsView from "./views/GoalsView";
 import LandingView from "./views/LandingView";
+import OnboardingView from "./views/OnboardingView";
 import ScannerView from "./views/ScannerView";
 import TrackerView from "./views/TrackerView";
 
@@ -28,10 +29,11 @@ function LoadingScreen() {
 
 export default function App() {
   const { user, loading: authLoading } = useAuth();
-  const { ready, loadError, confirmWeightsOpen, actions } = useAppState();
+  const { ready, needsOnboarding, loadError, confirmWeightsOpen, actions } = useAppState();
   const [tab, setTab] = useState("scanner");
   const [authView, setAuthView] = useState({ open: false, mode: "login" });
   const [visionOpen, setVisionOpen] = useState(false);
+  const [editStep, setEditStep] = useState(null); // onboarding step opened from the Goals tab, or null
   const camera = useCamera();
 
   // Signing out lands on the landing page, not on whichever auth form was used to sign in.
@@ -39,6 +41,7 @@ export default function App() {
     if (!user) {
       setAuthView({ open: false, mode: "login" });
       setTab("scanner");
+      setEditStep(null);
     }
   }, [user]);
 
@@ -60,6 +63,23 @@ export default function App() {
         onGetStarted={() => setAuthView({ open: true, mode: "signup" })}
         onSignIn={() => setAuthView({ open: true, mode: "login" })}
         isAuthenticated={false}
+      />
+    );
+  }
+
+  // First sign-in: collect the profile before anything else. Later: the same stepper edits it.
+  if (ready && (needsOnboarding || editStep !== null)) {
+    const editing = editStep !== null;
+    return (
+      <OnboardingView
+        key={editing ? `edit-${editStep}` : "onboard"}
+        initialStep={editStep ?? 0}
+        editing={editing}
+        onDone={() => {
+          setEditStep(null);
+          setTab(editing ? "goals" : "scanner");
+        }}
+        onCancel={() => setEditStep(null)}
       />
     );
   }
@@ -99,7 +119,7 @@ export default function App() {
           <>
             <ScannerView visible={tab === "scanner"} onOpenCamera={camera.openCamera} onCloseCamera={camera.closeCamera} />
             <TrackerView visible={tab === "tracker"} />
-            <GoalsView visible={tab === "goals"} />
+            <GoalsView visible={tab === "goals"} onEditProfile={setEditStep} />
           </>
         ) : (
           <StatusCard error={loadError} />

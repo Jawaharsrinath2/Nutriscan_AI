@@ -1,8 +1,9 @@
 import { createContext, useContext, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import { fetchDishes, fetchIngredients } from "../api/foodsApi";
-import { fetchGoals, fetchPlans, saveCustomGoals, selectPlan } from "../api/goalsApi";
+import { fetchPlans, saveCustomGoals } from "../api/goalsApi";
 import { clearToday, deleteMeal, fetchToday, logMeal } from "../api/mealsApi";
 import { autoFitPlate } from "../api/nutritionApi";
+import { fetchProfile, previewTargets, recalculateTargets, saveProfile } from "../api/profileApi";
 import { scanPhoto } from "../api/scanApi";
 import { fetchVision, setVisionMode } from "../api/visionApi";
 import { fetchWater, setWater } from "../api/waterApi";
@@ -23,6 +24,7 @@ export function AppStateProvider({ children }) {
   const { user } = useAuth();
   const [catalog, setCatalog] = useState(null);
   const [targets, setTargets] = useState(null);
+  const [profile, setProfile] = useState(null); // ProfileResponse; profile.profile is null until onboarded
   const [day, setDay] = useState(null);
   const [water, setWaterState] = useState(null);
   const [vision, setVision] = useState(null);
@@ -53,6 +55,7 @@ export function AppStateProvider({ children }) {
   useEffect(() => {
     if (!user) {
       setTargets(null);
+      setProfile(null);
       setDay(null);
       setWaterState(null);
       // The plate is client-side state; the next person to sign in must not inherit it.
@@ -60,10 +63,11 @@ export function AppStateProvider({ children }) {
       return;
     }
     let cancelled = false;
-    Promise.all([fetchGoals(), fetchToday(), fetchWater()])
-      .then(([goals, today, waterState]) => {
+    Promise.all([fetchProfile(), fetchToday(), fetchWater()])
+      .then(([profileState, today, waterState]) => {
         if (cancelled) return;
-        setTargets(goals);
+        setProfile(profileState);
+        setTargets(profileState.targets);
         setDay(today);
         setWaterState(waterState);
       })
@@ -73,7 +77,8 @@ export function AppStateProvider({ children }) {
     };
   }, [user?.id]);
 
-  const ready = catalog !== null && targets !== null && day !== null && water !== null;
+  const ready = catalog !== null && profile !== null && day !== null && water !== null;
+  const needsOnboarding = ready && profile.profile === null;
   const { evaluation } = useEvaluate(plate.items, ready, [day, targets]);
 
   const actions = useMemo(() => {
@@ -178,12 +183,25 @@ export function AppStateProvider({ children }) {
         if (delta > 0) showToast("Logged +250ml water!", "💧");
       }),
 
-      choosePlan: guarded(async (planKey) => {
-        setTargets(await selectPlan(planKey));
-        showToast("Updated your daily diet plan targets!", "🎯");
+      saveProfile: guarded(async (data) => {
+        const state = await saveProfile(data);
+        setProfile(state);
+        setTargets(state.targets);
+        showToast(`Profile saved — daily target ${state.targets.kcal.toLocaleString()} kcal`, "🎯");
+        return state;
+      }),
+      // No toast: the "Your numbers" step calls this on every slider move.
+      previewTargets: (data, signal) => previewTargets(data, signal),
+      recalculateTargets: guarded(async () => {
+        const state = await recalculateTargets();
+        setProfile(state);
+        setTargets(state.targets);
+        showToast("Targets recalculated from your profile", "🧮");
       }),
       saveCustomTargets: guarded(async (values) => {
-        setTargets(await saveCustomGoals(values));
+        const saved = await saveCustomGoals(values);
+        setTargets(saved);
+        setProfile((p) => (p ? { ...p, targets: saved, targets_overridden: true } : p));
         showToast("Saved custom daily calorie & macro goals!", "💾");
       }),
 
@@ -205,7 +223,9 @@ export function AppStateProvider({ children }) {
     };
   }, [catalog, showToast]);
 
-  const value = { ready, loadError, catalog, targets, day, water, vision, plate, evaluation, scanning, confirmWeightsOpen, actions };
+  const value = {
+    ready, needsOnboarding, loadError, catalog, targets, profile, day, water, vision, plate, evaluation, scanning, confirmWeightsOpen, actions,
+  };
   return <AppStateContext.Provider value={value}>{children}</AppStateContext.Provider>;
 }
 
