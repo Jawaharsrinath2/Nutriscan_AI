@@ -6,14 +6,7 @@ import pytest
 from app.services import auth_service
 
 
-@pytest.fixture(autouse=True)
-def reset_rate_limits():
-    """Clear in-memory rate limiting between tests."""
-    with auth_service._rate_lock:
-        auth_service._rate_buckets.clear()
-    yield
-    with auth_service._rate_lock:
-        auth_service._rate_buckets.clear()
+# The rate-limiter reset lives in conftest.py so every test file gets it.
 
 
 def test_auth_config(client):

@@ -27,6 +27,7 @@ class MealLog(Base):
     __tablename__ = "meal_logs"
 
     id: Mapped[str] = mapped_column(String(32), primary_key=True)
+    user_id: Mapped[int] = mapped_column(Integer, index=True, nullable=False)
     day: Mapped[date] = mapped_column(Date, index=True)
     created_at: Mapped[datetime] = mapped_column(DateTime)
     slot: Mapped[str] = mapped_column(String(32))
@@ -43,16 +44,17 @@ class MealLog(Base):
 class WaterLog(Base):
     __tablename__ = "water_logs"
 
+    user_id: Mapped[int] = mapped_column(Integer, primary_key=True)
     day: Mapped[date] = mapped_column(Date, primary_key=True)
     glasses: Mapped[int] = mapped_column(Integer, default=0)
 
 
 class DailyGoals(Base):
-    """Single-row table: the user's active daily targets."""
+    """One row per user: their active daily targets."""
 
     __tablename__ = "daily_goals"
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(Integer, primary_key=True)
     plan_key: Mapped[str] = mapped_column(String(32))
     kcal: Mapped[int] = mapped_column(Integer)
     protein: Mapped[int] = mapped_column(Integer)

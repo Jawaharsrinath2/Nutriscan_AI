@@ -1,4 +1,4 @@
-"""Today's meal log and water intake, persisted in SQLite."""
+"""A user's meal log and water intake, persisted in SQLite."""
 
 import uuid
 from datetime import date, datetime
@@ -30,26 +30,31 @@ def _to_schema(row: MealLog) -> LoggedMeal:
     )
 
 
-def list_meals(db: Session, day: date) -> list[LoggedMeal]:
-    rows = db.scalars(select(MealLog).where(MealLog.day == day).order_by(MealLog.created_at.desc()))
+def _meals_on(user_id: int, day: date):
+    return select(MealLog).where(MealLog.user_id == user_id, MealLog.day == day)
+
+
+def list_meals(db: Session, user_id: int, day: date) -> list[LoggedMeal]:
+    rows = db.scalars(_meals_on(user_id, day).order_by(MealLog.created_at.desc()))
     return [_to_schema(row) for row in rows]
 
 
-def consumed_totals(db: Session, day: date) -> DayTotals:
-    return day_totals(db.scalars(select(MealLog).where(MealLog.day == day)))
+def consumed_totals(db: Session, user_id: int, day: date) -> DayTotals:
+    return day_totals(db.scalars(_meals_on(user_id, day)))
 
 
-def day_log(db: Session, day: date) -> DayLog:
-    meals = list_meals(db, day)
+def day_log(db: Session, user_id: int, day: date) -> DayLog:
+    meals = list_meals(db, user_id, day)
     return DayLog(day=day, meals=meals, totals=day_totals(meals))
 
 
-def add_meal(db: Session, request: LogMealRequest, repo: FoodRepository) -> LoggedMeal:
+def add_meal(db: Session, user_id: int, request: LogMealRequest, repo: FoodRepository) -> LoggedMeal:
     # Totals are recomputed here rather than trusted from the client.
     totals = meal_totals(request.items, repo)
     now = datetime.now()
     row = MealLog(
         id=uuid.uuid4().hex,
+        user_id=user_id,
         day=now.date(),
         created_at=now,
         slot=request.slot,
@@ -67,26 +72,27 @@ def add_meal(db: Session, request: LogMealRequest, repo: FoodRepository) -> Logg
     return _to_schema(row)
 
 
-def delete_meal(db: Session, meal_id: str) -> bool:
-    result = db.execute(delete(MealLog).where(MealLog.id == meal_id))
+def delete_meal(db: Session, user_id: int, meal_id: str) -> bool:
+    # Filtering by user means another user's meal id simply "does not exist".
+    result = db.execute(delete(MealLog).where(MealLog.id == meal_id, MealLog.user_id == user_id))
     db.commit()
     return result.rowcount > 0
 
 
-def clear_day(db: Session, day: date) -> None:
-    db.execute(delete(MealLog).where(MealLog.day == day))
+def clear_day(db: Session, user_id: int, day: date) -> None:
+    db.execute(delete(MealLog).where(MealLog.user_id == user_id, MealLog.day == day))
     db.commit()
 
 
-def get_water(db: Session, day: date) -> WaterState:
-    row = db.get(WaterLog, day)
+def get_water(db: Session, user_id: int, day: date) -> WaterState:
+    row = db.get(WaterLog, (user_id, day))
     return WaterState(day=day, glasses=row.glasses if row else 0)
 
 
-def set_water(db: Session, day: date, glasses: int) -> WaterState:
-    row = db.get(WaterLog, day)
+def set_water(db: Session, user_id: int, day: date, glasses: int) -> WaterState:
+    row = db.get(WaterLog, (user_id, day))
     if row is None:
-        db.add(WaterLog(day=day, glasses=glasses))
+        db.add(WaterLog(user_id=user_id, day=day, glasses=glasses))
     else:
         row.glasses = glasses
     db.commit()

@@ -42,6 +42,12 @@ $env:NUTRISCAN_API_URL="http://127.0.0.1:8010"; npm run dev
 `npm run build` in `frontend/` creates `frontend/dist`. The backend then serves the whole app at
 http://127.0.0.1:8000/ — no Node needed to run it.
 
+## Accounts
+
+Meals, water and daily targets belong to the signed-in user (`/api/meals`, `/api/water`, `/api/goals`,
+`/api/nutrition` and `/api/scan` need a bearer token; the food catalogue is public). Databases created
+before accounts existed had shared tables; those are dropped and recreated per-user on startup.
+
 ## Photo detection
 
 The old app guessed dishes from file names and pixel colours, and its pins were hard-coded.

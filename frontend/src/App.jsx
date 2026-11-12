@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import StatusCard from "./components/common/StatusCard";
 import Header from "./components/layout/Header";
 import CameraModal from "./components/modals/CameraModal";
@@ -33,6 +33,14 @@ export default function App() {
   const [authView, setAuthView] = useState({ open: false, mode: "login" });
   const [visionOpen, setVisionOpen] = useState(false);
   const camera = useCamera();
+
+  // Signing out lands on the landing page, not on whichever auth form was used to sign in.
+  useEffect(() => {
+    if (!user) {
+      setAuthView({ open: false, mode: "login" });
+      setTab("scanner");
+    }
+  }, [user]);
 
   // Auth loading state
   if (authLoading) return <LoadingScreen />;

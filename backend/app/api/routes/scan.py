@@ -2,12 +2,14 @@ from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 
 from app.config import Settings, get_settings
 from app.schemas.scan import ScanResponse
+from app.services.auth_service import get_current_user
 from app.services.food_repository import FoodRepository, get_food_repository
 from app.services.scan_service import run_scan
 from app.vision.factory import DetectorChoice, get_detector_choice
 from app.vision.preprocess import InvalidImageError
 
-router = APIRouter(prefix="/api/scan", tags=["scan"])
+# Scans cost Gemini quota, so only signed-in users may run them.
+router = APIRouter(prefix="/api/scan", tags=["scan"], dependencies=[Depends(get_current_user)])
 
 
 @router.post("", response_model=ScanResponse)

@@ -8,7 +8,6 @@ from app.schemas.nutrition import Targets
 from app.services.food_repository import FoodRepository
 
 DEFAULT_PLAN = "balanced"
-GOALS_ROW_ID = 1
 # Same limits as the inputs on the Diet Plan & Goals screen.
 LIMITS = {"kcal": (800, 5000), "protein": (30, 350), "carbs": (20, 500), "fat": (15, 200)}
 
@@ -25,10 +24,10 @@ def _to_targets(row: DailyGoals) -> Targets:
     return Targets(plan_key=row.plan_key, kcal=row.kcal, protein=row.protein, carbs=row.carbs, fat=row.fat)
 
 
-def _save(db: Session, plan_key: str, values: dict[str, int]) -> Targets:
-    row = db.get(DailyGoals, GOALS_ROW_ID)
+def _save(db: Session, user_id: int, plan_key: str, values: dict[str, int]) -> Targets:
+    row = db.get(DailyGoals, user_id)
     if row is None:
-        row = DailyGoals(id=GOALS_ROW_ID, plan_key=plan_key, **values)
+        row = DailyGoals(user_id=user_id, plan_key=plan_key, **values)
         db.add(row)
     else:
         row.plan_key = plan_key
@@ -38,20 +37,20 @@ def _save(db: Session, plan_key: str, values: dict[str, int]) -> Targets:
     return _to_targets(row)
 
 
-def get_targets(db: Session, repo: FoodRepository) -> Targets:
-    row = db.get(DailyGoals, GOALS_ROW_ID)
+def get_targets(db: Session, user_id: int, repo: FoodRepository) -> Targets:
+    row = db.get(DailyGoals, user_id)
     if row is None:
-        return select_plan(db, repo, DEFAULT_PLAN)
+        return select_plan(db, user_id, repo, DEFAULT_PLAN)
     return _to_targets(row)
 
 
-def select_plan(db: Session, repo: FoodRepository, plan_key: str) -> Targets:
+def select_plan(db: Session, user_id: int, repo: FoodRepository, plan_key: str) -> Targets:
     plan = repo.plans.get(plan_key)
     if plan is None:
         raise UnknownPlanError(plan_key)
-    return _save(db, plan_key, {name: plan[name] for name in LIMITS})
+    return _save(db, user_id, plan_key, {name: plan[name] for name in LIMITS})
 
 
-def set_custom(db: Session, custom: CustomTargets) -> Targets:
+def set_custom(db: Session, user_id: int, custom: CustomTargets) -> Targets:
     values = {name: max(low, min(high, getattr(custom, name))) for name, (low, high) in LIMITS.items()}
-    return _save(db, "custom", values)
+    return _save(db, user_id, "custom", values)

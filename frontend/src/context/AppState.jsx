@@ -9,6 +9,7 @@ import { fetchWater, setWater } from "../api/waterApi";
 import { useEvaluate } from "../hooks/useEvaluate";
 import { useToast } from "../hooks/useToast";
 import { initialPlate, plateReducer } from "../lib/plateReducer";
+import { useAuth } from "./AuthContext";
 
 const AppStateContext = createContext(null);
 
@@ -19,6 +20,7 @@ const byKey = (list) => Object.fromEntries(list.map((item) => [item.key, item]))
 
 export function AppStateProvider({ children }) {
   const showToast = useToast();
+  const { user } = useAuth();
   const [catalog, setCatalog] = useState(null);
   const [targets, setTargets] = useState(null);
   const [day, setDay] = useState(null);
@@ -35,21 +37,43 @@ export function AppStateProvider({ children }) {
   const waterRef = useRef(water);
   waterRef.current = water;
 
+  // The food catalogue and detector status are public: load them once.
   useEffect(() => {
-    Promise.all([fetchIngredients(), fetchDishes(), fetchPlans(), fetchGoals(), fetchToday(), fetchWater(), fetchVision()])
-      .then(([ingredientList, dishList, plans, goals, today, waterState, visionStatus]) => {
+    Promise.all([fetchIngredients(), fetchDishes(), fetchPlans(), fetchVision()])
+      .then(([ingredientList, dishList, plans, visionStatus]) => {
         const dishes = byKey(dishList);
         setCatalog({ ingredientList, ingredients: byKey(ingredientList), dishList, dishes, plans });
-        setTargets(goals);
-        setDay(today);
-        setWaterState(waterState);
         setVision(visionStatus);
         dispatch({ type: "LOAD_DISH", dish: dishes[DEFAULT_DISH] ?? dishList[0], usePresetPhoto: true });
       })
       .catch(setLoadError);
   }, []);
 
-  const ready = catalog !== null;
+  // Targets, today's meals and water belong to the signed-in user: (re)load on login, clear on logout.
+  useEffect(() => {
+    if (!user) {
+      setTargets(null);
+      setDay(null);
+      setWaterState(null);
+      // The plate is client-side state; the next person to sign in must not inherit it.
+      if (catalog) dispatch({ type: "LOAD_DISH", dish: catalog.dishes[DEFAULT_DISH] ?? catalog.dishList[0], usePresetPhoto: true });
+      return;
+    }
+    let cancelled = false;
+    Promise.all([fetchGoals(), fetchToday(), fetchWater()])
+      .then(([goals, today, waterState]) => {
+        if (cancelled) return;
+        setTargets(goals);
+        setDay(today);
+        setWaterState(waterState);
+      })
+      .catch((err) => !cancelled && setLoadError(err));
+    return () => {
+      cancelled = true;
+    };
+  }, [user?.id]);
+
+  const ready = catalog !== null && targets !== null && day !== null && water !== null;
   const { evaluation } = useEvaluate(plate.items, ready, [day, targets]);
 
   const actions = useMemo(() => {
