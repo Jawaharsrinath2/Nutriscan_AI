@@ -1,0 +1,18 @@
+# Template for an Ultralytics YOLO detection dataset.
+# Layout:  datasets/indian_food/images/{train,val}/*.jpg  +  labels/{train,val}/*.txt (YOLO format)
+# Use ingredient keys from app/data/ingredients.json as class names so detections map 1:1.
+path: ../datasets/indian_food
+train: images/train
+val: images/val
+
+names:
+  0: white_rice
+  1: steamed_idli
+  2: masala_dosa_crepe
+  3: medu_vada
+  4: vegetable_sambar
+  5: pepper_rasam
+  6: coconut_chutney
+  7: tomato_chutney
+  8: plain_curd
+  9: appalam_papad

@@ -1,0 +1,18 @@
+Welcome to NutriScan AI, {{ username }}!
+
+Thanks for joining NutriScan AI! You're now equipped with multimodal food vision to inspect ingredients, portion weights, calories, and macros before you take a bite.
+
+⚡ How to get started:
+1. Snap your plate: Point your camera at any meal or choose a photo.
+2. Confirm approx weights: Tell the wizard if it's 250g or 500g for accurate calories.
+3. Log & track: Hit Auto-Fit to balance portions against your daily diet targets.
+
+Launch NutriScan AI here:
+{{ app_url }}
+
+Need help or have questions? Contact support@nutriscan.ai.
+
+Happy healthy eating!
+The NutriScan AI Team
+
+(c) {{ current_year }} NutriScan AI. All rights reserved.

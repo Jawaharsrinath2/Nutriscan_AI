@@ -1,0 +1,884 @@
+{
+  "steamed_white_rice": {
+    "title": "Steamed White Rice Bowl (Ponni / Sona Masoori)",
+    "cuisine": "South Indian Staple",
+    "image": "/samples/steamed_white_rice.jpg",
+    "hotspots": [
+      {
+        "x": 38,
+        "y": 45,
+        "label": "Steamed White Rice (200g)"
+      }
+    ],
+    "items": [
+      {
+        "key": "white_rice",
+        "grams": 200
+      }
+    ],
+    "menu_group": "🍚 Rice & South Indian Meals (Lunch / Dinner)",
+    "menu_label": "Steamed White Rice Bowl (Ponni / Sona Masoori - 200g)"
+  },
+  "south_indian_meals": {
+    "title": "South Indian Banana Leaf Full Meals (Rice, Sambar, Rasam, Kootu, Poriyal & Curd)",
+    "cuisine": "South Indian Traditional Meals",
+    "image": "/samples/south_indian_meals.jpg",
+    "hotspots": [
+      {
+        "x": 52,
+        "y": 56,
+        "label": "Steamed Ponni Rice (200g)"
+      },
+      {
+        "x": 24,
+        "y": 32,
+        "label": "Drumstick Sambar (120g)"
+      },
+      {
+        "x": 39,
+        "y": 20,
+        "label": "Pepper Rasam (90g)"
+      },
+      {
+        "x": 56,
+        "y": 17,
+        "label": "Dal Kootu (80g)"
+      },
+      {
+        "x": 72,
+        "y": 23,
+        "label": "Beans Poriyal (75g)"
+      },
+      {
+        "x": 84,
+        "y": 36,
+        "label": "Fresh Curd (70g)"
+      },
+      {
+        "x": 29,
+        "y": 70,
+        "label": "Crispy Appalam (15g)"
+      }
+    ],
+    "items": [
+      {
+        "key": "white_rice",
+        "grams": 200
+      },
+      {
+        "key": "vegetable_sambar",
+        "grams": 120
+      },
+      {
+        "key": "pepper_rasam",
+        "grams": 90
+      },
+      {
+        "key": "kootu_curry",
+        "grams": 80
+      },
+      {
+        "key": "beans_poriyal",
+        "grams": 75
+      },
+      {
+        "key": "plain_curd",
+        "grams": 70
+      },
+      {
+        "key": "appalam_papad",
+        "grams": 15
+      }
+    ],
+    "menu_group": "🍚 Rice & South Indian Meals (Lunch / Dinner)",
+    "menu_label": "South Indian Banana Leaf Full Meals (Rice, Sambar, Rasam, Kootu, Poriyal, Curd)"
+  },
+  "idli_sambar": {
+    "title": "South Indian Idli Sambar & Chutney Platter",
+    "cuisine": "South Indian Light Meal",
+    "image": "/samples/idli_sambar.jpg",
+    "hotspots": [
+      {
+        "x": 65,
+        "y": 45,
+        "label": "3 Steamed Idlis (150g)"
+      },
+      {
+        "x": 41,
+        "y": 25,
+        "label": "Vegetable Sambar (140g)"
+      },
+      {
+        "x": 28,
+        "y": 52,
+        "label": "Coconut Chutney (35g)"
+      },
+      {
+        "x": 45,
+        "y": 74,
+        "label": "Kara Tomato Chutney (30g)"
+      }
+    ],
+    "items": [
+      {
+        "key": "steamed_idli",
+        "grams": 150
+      },
+      {
+        "key": "vegetable_sambar",
+        "grams": 140
+      },
+      {
+        "key": "coconut_chutney",
+        "grams": 35
+      },
+      {
+        "key": "tomato_chutney",
+        "grams": 30
+      }
+    ],
+    "menu_group": "🥞 South Indian Tiffin & Breakfast",
+    "menu_label": "South Indian Idli Sambar & Chutney Platter (3 Idlis)"
+  },
+  "masala_dosa": {
+    "title": "Crispy Masala Dosa with Medu Vada, Sambar & Chutneys",
+    "cuisine": "South Indian Classic Tiffin",
+    "image": "/samples/masala_dosa.jpg",
+    "hotspots": [
+      {
+        "x": 43,
+        "y": 44,
+        "label": "Crispy Masala Dosa (160g)"
+      },
+      {
+        "x": 62,
+        "y": 60,
+        "label": "Medu Vada (55g)"
+      },
+      {
+        "x": 18,
+        "y": 21,
+        "label": "Vegetable Sambar (120g)"
+      },
+      {
+        "x": 79,
+        "y": 22,
+        "label": "Coconut Chutney (35g)"
+      },
+      {
+        "x": 86,
+        "y": 49,
+        "label": "Kara Chutney (30g)"
+      }
+    ],
+    "items": [
+      {
+        "key": "masala_dosa_crepe",
+        "grams": 95
+      },
+      {
+        "key": "potato_masala",
+        "grams": 65
+      },
+      {
+        "key": "medu_vada",
+        "grams": 55
+      },
+      {
+        "key": "vegetable_sambar",
+        "grams": 120
+      },
+      {
+        "key": "coconut_chutney",
+        "grams": 35
+      },
+      {
+        "key": "tomato_chutney",
+        "grams": 30
+      }
+    ],
+    "menu_group": "🥞 South Indian Tiffin & Breakfast",
+    "menu_label": "Crispy Masala Dosa with Medu Vada, Sambar & Chutneys"
+  },
+  "plain_dosa_sambar": {
+    "title": "Kal Dosa / Plain Roast Dosa (2 Nos) with Sambar & Chutney",
+    "cuisine": "South Indian Tiffin",
+    "image": "/samples/masala_dosa.jpg",
+    "hotspots": [],
+    "items": [
+      {
+        "key": "kal_dosa",
+        "grams": 140
+      },
+      {
+        "key": "vegetable_sambar",
+        "grams": 130
+      },
+      {
+        "key": "coconut_chutney",
+        "grams": 35
+      },
+      {
+        "key": "tomato_chutney",
+        "grams": 25
+      }
+    ],
+    "menu_group": "🥞 South Indian Tiffin & Breakfast",
+    "menu_label": "Kal Dosa / Plain Roast Dosa (2 Nos) with Sambar & Coconut Chutney"
+  },
+  "ven_pongal_vada": {
+    "title": "Ghee Ven Pongal with Crispy Medu Vada, Sambar & Chutney",
+    "cuisine": "South Indian Breakfast",
+    "image": "/samples/idli_sambar.jpg",
+    "hotspots": [],
+    "items": [
+      {
+        "key": "ven_pongal",
+        "grams": 180
+      },
+      {
+        "key": "medu_vada",
+        "grams": 50
+      },
+      {
+        "key": "vegetable_sambar",
+        "grams": 120
+      },
+      {
+        "key": "coconut_chutney",
+        "grams": 35
+      }
+    ],
+    "menu_group": "🥞 South Indian Tiffin & Breakfast",
+    "menu_label": "Ghee Ven Pongal with Crispy Medu Vada, Sambar & Chutney"
+  },
+  "sambar_rice": {
+    "title": "Sambar Sadam (South Indian Lentil Rice) with Potato Fry & Appalam",
+    "cuisine": "South Indian Comfort Lunch",
+    "image": "/samples/south_indian_meals.jpg",
+    "hotspots": [],
+    "items": [
+      {
+        "key": "sambar_rice_dish",
+        "grams": 260
+      },
+      {
+        "key": "urulai_roast",
+        "grams": 70
+      },
+      {
+        "key": "appalam_papad",
+        "grams": 15
+      },
+      {
+        "key": "ghee_oil",
+        "grams": 5
+      }
+    ],
+    "menu_group": "🍚 Rice & South Indian Meals (Lunch / Dinner)",
+    "menu_label": "Sambar Sadam (South Indian Lentil Rice) with Urulai Potato Fry & Appalam"
+  },
+  "curd_rice": {
+    "title": "Thayir Sadam (South Indian Seasoned Curd Rice) with Poriyal",
+    "cuisine": "Gut-Friendly Probiotic Meal",
+    "image": "/samples/steamed_white_rice.jpg",
+    "hotspots": [],
+    "items": [
+      {
+        "key": "curd_rice_dish",
+        "grams": 250
+      },
+      {
+        "key": "beans_poriyal",
+        "grams": 60
+      }
+    ],
+    "menu_group": "🍚 Rice & South Indian Meals (Lunch / Dinner)",
+    "menu_label": "Thayir Sadam (South Indian Curd Rice) with Pickle"
+  },
+  "lemon_rice": {
+    "title": "Elumichai Sadam (South Indian Lemon Rice) with Peanuts & Potato Fry",
+    "cuisine": "South Indian Variety Rice",
+    "image": "/samples/south_indian_meals.jpg",
+    "hotspots": [],
+    "items": [
+      {
+        "key": "lemon_rice_dish",
+        "grams": 230
+      },
+      {
+        "key": "urulai_roast",
+        "grams": 65
+      },
+      {
+        "key": "appalam_papad",
+        "grams": 12
+      }
+    ],
+    "menu_group": "🍚 Rice & South Indian Meals (Lunch / Dinner)",
+    "menu_label": "Elumichai Sadam (South Indian Lemon Rice with Peanuts & Appalam)"
+  },
+  "tamarind_rice": {
+    "title": "Puliyodharai (Temple-Style Tamarind Rice) with Appalam",
+    "cuisine": "South Indian Variety Rice",
+    "image": "/samples/south_indian_meals.jpg",
+    "hotspots": [],
+    "items": [
+      {
+        "key": "tamarind_rice_dish",
+        "grams": 230
+      },
+      {
+        "key": "appalam_papad",
+        "grams": 15
+      },
+      {
+        "key": "plain_curd",
+        "grams": 60
+      }
+    ],
+    "menu_group": "🍚 Rice & South Indian Meals (Lunch / Dinner)",
+    "menu_label": "Puliyodharai (Temple-Style Tamarind Rice with Roasted Peanuts)"
+  },
+  "tomato_rice": {
+    "title": "Thakkali Sadam (South Indian Spiced Tomato Rice) with Onion Raita",
+    "cuisine": "South Indian Variety Rice",
+    "image": "/samples/south_indian_meals.jpg",
+    "hotspots": [],
+    "items": [
+      {
+        "key": "tomato_rice_dish",
+        "grams": 240
+      },
+      {
+        "key": "curd_raita",
+        "grams": 70
+      },
+      {
+        "key": "boiled_egg",
+        "grams": 50
+      }
+    ],
+    "menu_group": "🍚 Rice & South Indian Meals (Lunch / Dinner)",
+    "menu_label": "Thakkali Sadam (South Indian Spiced Tomato Rice with Onion Raita)"
+  },
+  "ragi_dosa_platter": {
+    "title": "Healthy Ragi Dosa / Keppai Adai (2 Nos) with Sambar & Chutney",
+    "cuisine": "South Indian Millet Tiffin",
+    "image": "/samples/masala_dosa.jpg",
+    "hotspots": [],
+    "items": [
+      {
+        "key": "ragi_dosa",
+        "grams": 150
+      },
+      {
+        "key": "vegetable_sambar",
+        "grams": 130
+      },
+      {
+        "key": "coconut_chutney",
+        "grams": 30
+      }
+    ],
+    "menu_group": "🥞 South Indian Tiffin & Breakfast",
+    "menu_label": "Healthy Ragi Dosa / Keppai Adai (2 Nos) with Sambar & Chutney"
+  },
+  "uttapam_platter": {
+    "title": "Onion & Tomato Uttapam (2 Nos) with Sambar & Kara Chutney",
+    "cuisine": "South Indian Tiffin",
+    "image": "/samples/masala_dosa.jpg",
+    "hotspots": [],
+    "items": [
+      {
+        "key": "uttapam",
+        "grams": 170
+      },
+      {
+        "key": "vegetable_sambar",
+        "grams": 120
+      },
+      {
+        "key": "tomato_chutney",
+        "grams": 35
+      },
+      {
+        "key": "coconut_chutney",
+        "grams": 25
+      }
+    ],
+    "menu_group": "🥞 South Indian Tiffin & Breakfast",
+    "menu_label": "Onion & Tomato Uttapam (2 Nos) with Sambar & Kara Chutney"
+  },
+  "upma_chutney": {
+    "title": "South Indian Rava Upma / Kichadi with Coconut Chutney & Sambar",
+    "cuisine": "South Indian Light Breakfast",
+    "image": "/samples/idli_sambar.jpg",
+    "hotspots": [],
+    "items": [
+      {
+        "key": "rava_upma",
+        "grams": 200
+      },
+      {
+        "key": "coconut_chutney",
+        "grams": 35
+      },
+      {
+        "key": "vegetable_sambar",
+        "grams": 100
+      }
+    ],
+    "menu_group": "🥞 South Indian Tiffin & Breakfast",
+    "menu_label": "South Indian Rava Upma / Kichadi with Coconut Chutney & Sambar"
+  },
+  "idiyappam_kurma": {
+    "title": "Steamed Idiyappam (3 String Hoppers) with Vegetable Coconut Kurma",
+    "cuisine": "South Indian Light Dinner",
+    "image": "/samples/idli_sambar.jpg",
+    "hotspots": [],
+    "items": [
+      {
+        "key": "idiyappam",
+        "grams": 160
+      },
+      {
+        "key": "veg_kurma",
+        "grams": 130
+      }
+    ],
+    "menu_group": "🥞 South Indian Tiffin & Breakfast",
+    "menu_label": "Steamed Idiyappam (3 String Hoppers) with Vegetable Coconut Kurma"
+  },
+  "appam_kurma": {
+    "title": "Lacy Fermented Appam (2 Nos) with South Indian Vegetable Kurma",
+    "cuisine": "South Indian Classic",
+    "image": "/samples/idli_sambar.jpg",
+    "hotspots": [],
+    "items": [
+      {
+        "key": "appam",
+        "grams": 130
+      },
+      {
+        "key": "veg_kurma",
+        "grams": 130
+      }
+    ],
+    "menu_group": "🥞 South Indian Tiffin & Breakfast",
+    "menu_label": "Lacy Fermented Appam (2 Nos) with Vegetable Steward Kurma"
+  },
+  "parotta_salna": {
+    "title": "Madurai Flaky Parotta (2 Nos) with Spiced Salna & Egg Roast",
+    "cuisine": "South Indian Street Classic",
+    "image": "/samples/masala_dosa.jpg",
+    "hotspots": [],
+    "items": [
+      {
+        "key": "parotta",
+        "grams": 150
+      },
+      {
+        "key": "salna_gravy",
+        "grams": 130
+      },
+      {
+        "key": "boiled_egg",
+        "grams": 50
+      },
+      {
+        "key": "curd_raita",
+        "grams": 50
+      }
+    ],
+    "menu_group": "🥞 South Indian Tiffin & Breakfast",
+    "menu_label": "Madurai / Malabar Flaky Parotta (2 Nos) with Veg / Chicken Salna"
+  },
+  "chettinad_chicken_meal": {
+    "title": "Chettinad Pepper Chicken Curry with Steamed Ponni Rice & Rasam",
+    "cuisine": "South Indian High-Protein Non-Veg",
+    "image": "/samples/south_indian_meals.jpg",
+    "hotspots": [],
+    "items": [
+      {
+        "key": "white_rice",
+        "grams": 190
+      },
+      {
+        "key": "chettinad_chicken",
+        "grams": 150
+      },
+      {
+        "key": "pepper_rasam",
+        "grams": 90
+      },
+      {
+        "key": "boiled_egg",
+        "grams": 50
+      },
+      {
+        "key": "beans_poriyal",
+        "grams": 60
+      }
+    ],
+    "menu_group": "🍚 Rice & South Indian Meals (Lunch / Dinner)",
+    "menu_label": "Chettinad Chicken Curry with Steamed Ponni White Rice & Rasam"
+  },
+  "meen_kuzhambu_rice": {
+    "title": "South Indian Meen Kuzhambu (Fish Curry) with Steamed White Rice",
+    "cuisine": "South Indian Coastal Meal",
+    "image": "/samples/south_indian_meals.jpg",
+    "hotspots": [],
+    "items": [
+      {
+        "key": "white_rice",
+        "grams": 190
+      },
+      {
+        "key": "meen_kuzhambu",
+        "grams": 150
+      },
+      {
+        "key": "pepper_rasam",
+        "grams": 80
+      },
+      {
+        "key": "beans_poriyal",
+        "grams": 60
+      }
+    ],
+    "menu_group": "🍚 Rice & South Indian Meals (Lunch / Dinner)",
+    "menu_label": "South Indian Meen Kuzhambu (Fish Curry) with Steamed White Rice"
+  },
+  "chicken_quinoa_bowl": {
+    "title": "Grilled Chicken Quinoa Power Bowl",
+    "cuisine": "High-Protein Bowl",
+    "image": "/samples/chicken_quinoa_bowl.jpg",
+    "hotspots": [
+      {
+        "x": 64,
+        "y": 60,
+        "label": "Grilled Chicken (110g)"
+      },
+      {
+        "x": 41,
+        "y": 29,
+        "label": "Avocado (55g)"
+      },
+      {
+        "x": 52,
+        "y": 47,
+        "label": "Boiled Egg (50g)"
+      },
+      {
+        "x": 63,
+        "y": 28,
+        "label": "Sweet Potato (75g)"
+      },
+      {
+        "x": 40,
+        "y": 74,
+        "label": "Steamed Broccoli (65g)"
+      }
+    ],
+    "items": [
+      {
+        "key": "grilled_chicken",
+        "grams": 110
+      },
+      {
+        "key": "cooked_quinoa",
+        "grams": 95
+      },
+      {
+        "key": "avocado",
+        "grams": 55
+      },
+      {
+        "key": "boiled_egg",
+        "grams": 50
+      },
+      {
+        "key": "sweet_potato",
+        "grams": 75
+      },
+      {
+        "key": "steamed_broccoli",
+        "grams": 65
+      },
+      {
+        "key": "cherry_tomatoes",
+        "grams": 45
+      }
+    ],
+    "menu_group": "🥗 High-Protein, North Indian & Global Meals",
+    "menu_label": "Grilled Chicken Quinoa Power Bowl (Avocado, Egg, Sweet Potato)"
+  },
+  "paneer_thali": {
+    "title": "Balanced Paneer Tikka & Dal Protein Thali",
+    "cuisine": "Indian Vegetarian Thali",
+    "image": "/samples/paneer_thali.jpg",
+    "hotspots": [
+      {
+        "x": 42,
+        "y": 28,
+        "label": "Paneer Tikka (100g)"
+      },
+      {
+        "x": 63,
+        "y": 25,
+        "label": "Dal Tadka (130g)"
+      },
+      {
+        "x": 35,
+        "y": 58,
+        "label": "Brown Rice (110g)"
+      },
+      {
+        "x": 56,
+        "y": 70,
+        "label": "Whole Wheat Roti (45g)"
+      },
+      {
+        "x": 74,
+        "y": 48,
+        "label": "Kachumber Salad (70g)"
+      }
+    ],
+    "items": [
+      {
+        "key": "paneer_tikka",
+        "grams": 100
+      },
+      {
+        "key": "dal_tadka",
+        "grams": 130
+      },
+      {
+        "key": "brown_rice",
+        "grams": 110
+      },
+      {
+        "key": "whole_wheat_roti",
+        "grams": 45
+      },
+      {
+        "key": "kachumber_salad",
+        "grams": 70
+      }
+    ],
+    "menu_group": "🥗 High-Protein, North Indian & Global Meals",
+    "menu_label": "Balanced Paneer Tikka & Dal Tadka Protein Thali"
+  },
+  "oats_berry_bowl": {
+    "title": "Rolled Oats Berry, Banana & Almond Bowl",
+    "cuisine": "Fiber-Rich Breakfast",
+    "image": "/samples/oats_berry_bowl.jpg",
+    "hotspots": [
+      {
+        "x": 39,
+        "y": 38,
+        "label": "Sliced Banana (70g)"
+      },
+      {
+        "x": 48,
+        "y": 50,
+        "label": "Fresh Berries (75g)"
+      },
+      {
+        "x": 60,
+        "y": 62,
+        "label": "Sliced Almonds (20g)"
+      },
+      {
+        "x": 54,
+        "y": 54,
+        "label": "Chia Seeds (12g)"
+      }
+    ],
+    "items": [
+      {
+        "key": "cooked_oats",
+        "grams": 180
+      },
+      {
+        "key": "banana_slices",
+        "grams": 70
+      },
+      {
+        "key": "mixed_berries",
+        "grams": 75
+      },
+      {
+        "key": "sliced_almonds",
+        "grams": 20
+      },
+      {
+        "key": "chia_seeds",
+        "grams": 12
+      }
+    ],
+    "menu_group": "🥗 High-Protein, North Indian & Global Meals",
+    "menu_label": "Rolled Oats Berry, Banana, Chia & Almond Breakfast Bowl"
+  },
+  "chicken_biryani": {
+    "title": "Hyderabadi Chicken Dum Biryani with Raita",
+    "cuisine": "Festive Indian Main",
+    "image": "/samples/chicken_quinoa_bowl.jpg",
+    "hotspots": [],
+    "items": [
+      {
+        "key": "biryani_rice",
+        "grams": 210
+      },
+      {
+        "key": "grilled_chicken",
+        "grams": 120
+      },
+      {
+        "key": "curd_raita",
+        "grams": 70
+      },
+      {
+        "key": "ghee_oil",
+        "grams": 10
+      },
+      {
+        "key": "kachumber_salad",
+        "grams": 50
+      }
+    ],
+    "menu_group": "🥗 High-Protein, North Indian & Global Meals",
+    "menu_label": "Hyderabadi Chicken Dum Biryani with Raita & Salad"
+  },
+  "dal_chawal_sabzi": {
+    "title": "Home-Style Dal Tadka, Rice, Sabzi & Curd",
+    "cuisine": "Balanced Home Meal",
+    "image": "/samples/paneer_thali.jpg",
+    "hotspots": [],
+    "items": [
+      {
+        "key": "dal_tadka",
+        "grams": 150
+      },
+      {
+        "key": "white_rice",
+        "grams": 140
+      },
+      {
+        "key": "beans_poriyal",
+        "grams": 90
+      },
+      {
+        "key": "plain_curd",
+        "grams": 65
+      },
+      {
+        "key": "ghee_oil",
+        "grams": 5
+      }
+    ],
+    "menu_group": "🥗 High-Protein, North Indian & Global Meals",
+    "menu_label": "Home-Style Dal Tadka, Steamed Rice, Sabzi & Curd"
+  },
+  "egg_omelette_toast": {
+    "title": "3-Egg Masala Omelette with Whole Wheat Toast & Avocado",
+    "cuisine": "High-Protein Breakfast",
+    "image": "/samples/chicken_quinoa_bowl.jpg",
+    "hotspots": [],
+    "items": [
+      {
+        "key": "boiled_egg",
+        "grams": 150
+      },
+      {
+        "key": "whole_wheat_roti",
+        "grams": 60
+      },
+      {
+        "key": "avocado",
+        "grams": 50
+      },
+      {
+        "key": "cherry_tomatoes",
+        "grams": 40
+      },
+      {
+        "key": "ghee_oil",
+        "grams": 5
+      }
+    ],
+    "menu_group": "🥗 High-Protein, North Indian & Global Meals",
+    "menu_label": "3-Egg Masala Omelette with 2 Whole Wheat Toasts & Avocado"
+  },
+  "grilled_salmon_salad": {
+    "title": "Grilled Salmon & Mediterranean Chickpea Salad",
+    "cuisine": "Omega-3 Lean Meal",
+    "image": "/samples/chicken_quinoa_bowl.jpg",
+    "hotspots": [],
+    "items": [
+      {
+        "key": "grilled_salmon",
+        "grams": 130
+      },
+      {
+        "key": "boiled_chickpeas",
+        "grams": 80
+      },
+      {
+        "key": "avocado",
+        "grams": 45
+      },
+      {
+        "key": "kachumber_salad",
+        "grams": 90
+      }
+    ],
+    "menu_group": "🥗 High-Protein, North Indian & Global Meals",
+    "menu_label": "Grilled Salmon & Mediterranean Chickpea Salad"
+  },
+  "whey_banana_shake": {
+    "title": "Post-Workout Whey Protein Banana Peanut Butter Smoothie",
+    "cuisine": "Recovery Shake",
+    "image": "/samples/oats_berry_bowl.jpg",
+    "hotspots": [],
+    "items": [
+      {
+        "key": "whey_scoop",
+        "grams": 32
+      },
+      {
+        "key": "banana_slices",
+        "grams": 100
+      },
+      {
+        "key": "peanut_butter",
+        "grams": 20
+      },
+      {
+        "key": "cooked_oats",
+        "grams": 60
+      }
+    ],
+    "menu_group": "🥗 High-Protein, North Indian & Global Meals",
+    "menu_label": "Post-Workout Whey Protein Banana Peanut Butter Smoothie"
+  },
+  "burger_fries_meal": {
+    "title": "Loaded Cheese Burger with Crispy French Fries",
+    "cuisine": "Fast Food / Cheat Meal",
+    "image": "/samples/paneer_thali.jpg",
+    "hotspots": [],
+    "items": [
+      {
+        "key": "burger_patty_bun",
+        "grams": 210
+      },
+      {
+        "key": "french_fries",
+        "grams": 115
+      }
+    ],
+    "menu_group": "🥗 High-Protein, North Indian & Global Meals",
+    "menu_label": "Loaded Cheese Burger with French Fries (Cheat Meal Check)"
+  }
+}

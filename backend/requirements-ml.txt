@@ -1,0 +1,2 @@
+# Optional: only needed for DETECTOR=yolo (local detection). Pulls in torch (~2 GB).
+ultralytics==8.3.58

@@ -1,0 +1,14 @@
+{
+  "welcome": {
+    "subject": "Welcome to NutriScan AI, {{ username }}! 🥗",
+    "html_template": "welcome.html",
+    "text_template": "welcome.txt",
+    "description": "Sent to new users upon registering an account"
+  },
+  "password_reset": {
+    "subject": "Your NutriScan AI Verification Code: {{ code }} 🔐",
+    "html_template": "password_reset.html",
+    "text_template": "password_reset.txt",
+    "description": "Sent when a user requests a password reset code"
+  }
+}

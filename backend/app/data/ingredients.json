@@ -1,0 +1,515 @@
+{
+  "white_rice": {
+    "name": "Steamed White Rice (Ponni / Sona Masoori)",
+    "category": "Carb",
+    "kcal": 130,
+    "protein": 2.7,
+    "carbs": 28.2,
+    "fat": 0.3,
+    "fiber": 0.4
+  },
+  "steamed_idli": {
+    "name": "Steamed Rice & Lentil Idli",
+    "category": "Carb",
+    "kcal": 146,
+    "protein": 4.5,
+    "carbs": 30.2,
+    "fat": 0.6,
+    "fiber": 1.8
+  },
+  "masala_dosa_crepe": {
+    "name": "Crispy Fermented Dosa Crepe",
+    "category": "Carb",
+    "kcal": 188,
+    "protein": 4.6,
+    "carbs": 32.5,
+    "fat": 4.5,
+    "fiber": 1.6
+  },
+  "kal_dosa": {
+    "name": "Soft Kal Dosa / Plain Roast Dosa",
+    "category": "Carb",
+    "kcal": 168,
+    "protein": 4.2,
+    "carbs": 31.0,
+    "fat": 2.8,
+    "fiber": 1.5
+  },
+  "ragi_dosa": {
+    "name": "Ragi Dosa / Keppai Adai (Finger Millet)",
+    "category": "Carb",
+    "kcal": 156,
+    "protein": 5.2,
+    "carbs": 27.8,
+    "fat": 2.8,
+    "fiber": 3.6
+  },
+  "uttapam": {
+    "name": "Onion & Tomato Uttapam",
+    "category": "Carb",
+    "kcal": 165,
+    "protein": 4.4,
+    "carbs": 28.5,
+    "fat": 3.6,
+    "fiber": 1.9
+  },
+  "medu_vada": {
+    "name": "Crispy Urad Dal Medu Vada",
+    "category": "Protein",
+    "kcal": 290,
+    "protein": 9.2,
+    "carbs": 31.5,
+    "fat": 14.2,
+    "fiber": 3.1
+  },
+  "ven_pongal": {
+    "name": "Ghee Ven Pongal (Rice & Moong Dal)",
+    "category": "Carb",
+    "kcal": 162,
+    "protein": 5.1,
+    "carbs": 24.8,
+    "fat": 4.6,
+    "fiber": 1.9
+  },
+  "rava_upma": {
+    "name": "South Indian Rava Upma / Kichadi",
+    "category": "Carb",
+    "kcal": 132,
+    "protein": 3.6,
+    "carbs": 21.4,
+    "fat": 3.6,
+    "fiber": 1.5
+  },
+  "idiyappam": {
+    "name": "Steamed Idiyappam (String Hoppers)",
+    "category": "Carb",
+    "kcal": 138,
+    "protein": 2.8,
+    "carbs": 30.1,
+    "fat": 0.5,
+    "fiber": 1.2
+  },
+  "appam": {
+    "name": "Fermented Rice & Coconut Appam",
+    "category": "Carb",
+    "kcal": 152,
+    "protein": 2.9,
+    "carbs": 28.4,
+    "fat": 2.9,
+    "fiber": 1.0
+  },
+  "parotta": {
+    "name": "Madurai / Malabar Layered Parotta",
+    "category": "Carb",
+    "kcal": 310,
+    "protein": 6.8,
+    "carbs": 44.5,
+    "fat": 11.6,
+    "fiber": 1.8
+  },
+  "vegetable_sambar": {
+    "name": "Toor Dal Drumstick Vegetable Sambar",
+    "category": "Protein",
+    "kcal": 68,
+    "protein": 3.4,
+    "carbs": 9.8,
+    "fat": 1.8,
+    "fiber": 2.6
+  },
+  "pepper_rasam": {
+    "name": "South Indian Pepper Garlic Rasam",
+    "category": "Veggie",
+    "kcal": 28,
+    "protein": 1.1,
+    "carbs": 4.8,
+    "fat": 0.6,
+    "fiber": 0.8
+  },
+  "kootu_curry": {
+    "name": "Mixed Vegetable & Moong Dal Kootu",
+    "category": "Protein",
+    "kcal": 88,
+    "protein": 4.1,
+    "carbs": 11.2,
+    "fat": 2.9,
+    "fiber": 3.2
+  },
+  "beans_poriyal": {
+    "name": "Green Beans / Cabbage Coconut Poriyal",
+    "category": "Veggie",
+    "kcal": 74,
+    "protein": 2.2,
+    "carbs": 8.6,
+    "fat": 3.4,
+    "fiber": 2.9
+  },
+  "potato_masala": {
+    "name": "Spiced Potato Onion Dosa Masala",
+    "category": "Carb",
+    "kcal": 115,
+    "protein": 2.1,
+    "carbs": 19.4,
+    "fat": 3.4,
+    "fiber": 2.1
+  },
+  "urulai_roast": {
+    "name": "South Indian Urulai Potato Roast",
+    "category": "Carb",
+    "kcal": 145,
+    "protein": 2.2,
+    "carbs": 21.0,
+    "fat": 5.8,
+    "fiber": 2.2
+  },
+  "sambar_rice_dish": {
+    "name": "Sambar Sadam (Rice & Toor Dal Lentil Mash)",
+    "category": "Carb",
+    "kcal": 124,
+    "protein": 4.2,
+    "carbs": 21.8,
+    "fat": 2.2,
+    "fiber": 2.4
+  },
+  "curd_rice_dish": {
+    "name": "Thayir Sadam (Tempered Curd Rice)",
+    "category": "Carb",
+    "kcal": 118,
+    "protein": 3.4,
+    "carbs": 19.5,
+    "fat": 2.8,
+    "fiber": 0.5
+  },
+  "lemon_rice_dish": {
+    "name": "Elumichai Sadam (Lemon Rice with Peanuts)",
+    "category": "Carb",
+    "kcal": 168,
+    "protein": 3.6,
+    "carbs": 27.5,
+    "fat": 4.8,
+    "fiber": 1.6
+  },
+  "tamarind_rice_dish": {
+    "name": "Puliyodharai (Temple Tamarind Rice)",
+    "category": "Carb",
+    "kcal": 175,
+    "protein": 3.5,
+    "carbs": 29.0,
+    "fat": 5.1,
+    "fiber": 1.8
+  },
+  "tomato_rice_dish": {
+    "name": "Thakkali Sadam (Spiced Tomato Rice)",
+    "category": "Carb",
+    "kcal": 148,
+    "protein": 3.1,
+    "carbs": 26.2,
+    "fat": 3.5,
+    "fiber": 1.6
+  },
+  "veg_kurma": {
+    "name": "South Indian Coconut Vegetable Kurma",
+    "category": "Healthy Fat",
+    "kcal": 110,
+    "protein": 2.6,
+    "carbs": 9.8,
+    "fat": 6.8,
+    "fiber": 2.4
+  },
+  "salna_gravy": {
+    "name": "Spiced Madurai Salna Gravy",
+    "category": "Healthy Fat",
+    "kcal": 115,
+    "protein": 3.2,
+    "carbs": 6.5,
+    "fat": 8.4,
+    "fiber": 1.2
+  },
+  "chettinad_chicken": {
+    "name": "Chettinad Pepper Chicken Curry",
+    "category": "Protein",
+    "kcal": 195,
+    "protein": 22.5,
+    "carbs": 4.8,
+    "fat": 9.6,
+    "fiber": 1.2
+  },
+  "meen_kuzhambu": {
+    "name": "Meen Kuzhambu (Tamarind Fish Curry)",
+    "category": "Protein",
+    "kcal": 142,
+    "protein": 16.8,
+    "carbs": 4.2,
+    "fat": 6.4,
+    "fiber": 0.8
+  },
+  "coconut_chutney": {
+    "name": "Fresh Coconut Chutney",
+    "category": "Healthy Fat",
+    "kcal": 215,
+    "protein": 2.6,
+    "carbs": 7.4,
+    "fat": 19.5,
+    "fiber": 3.2
+  },
+  "tomato_chutney": {
+    "name": "Kara Onion Tomato Chutney",
+    "category": "Veggie",
+    "kcal": 82,
+    "protein": 1.4,
+    "carbs": 10.5,
+    "fat": 3.8,
+    "fiber": 1.9
+  },
+  "plain_curd": {
+    "name": "Fresh Thick Curd / Thayir",
+    "category": "Protein",
+    "kcal": 61,
+    "protein": 3.5,
+    "carbs": 4.7,
+    "fat": 3.3,
+    "fiber": 0.0
+  },
+  "appalam_papad": {
+    "name": "Crispy Urad Dal Appalam / Papad",
+    "category": "Protein",
+    "kcal": 285,
+    "protein": 18.0,
+    "carbs": 42.0,
+    "fat": 4.5,
+    "fiber": 5.0
+  },
+  "grilled_chicken": {
+    "name": "Grilled Chicken Breast",
+    "category": "Protein",
+    "kcal": 165,
+    "protein": 31.0,
+    "carbs": 0.0,
+    "fat": 3.6,
+    "fiber": 0.0
+  },
+  "cooked_quinoa": {
+    "name": "Cooked Quinoa",
+    "category": "Carb",
+    "kcal": 120,
+    "protein": 4.4,
+    "carbs": 21.3,
+    "fat": 1.9,
+    "fiber": 2.8
+  },
+  "avocado": {
+    "name": "Fresh Sliced Avocado",
+    "category": "Healthy Fat",
+    "kcal": 160,
+    "protein": 2.0,
+    "carbs": 8.5,
+    "fat": 14.7,
+    "fiber": 6.7
+  },
+  "boiled_egg": {
+    "name": "Boiled Whole Egg / Egg Roast",
+    "category": "Protein",
+    "kcal": 155,
+    "protein": 12.6,
+    "carbs": 1.1,
+    "fat": 10.6,
+    "fiber": 0.0
+  },
+  "sweet_potato": {
+    "name": "Roasted Sweet Potato",
+    "category": "Carb",
+    "kcal": 90,
+    "protein": 2.0,
+    "carbs": 20.7,
+    "fat": 0.2,
+    "fiber": 3.3
+  },
+  "steamed_broccoli": {
+    "name": "Steamed Broccoli & Greens",
+    "category": "Veggie",
+    "kcal": 35,
+    "protein": 2.4,
+    "carbs": 7.2,
+    "fat": 0.4,
+    "fiber": 3.3
+  },
+  "cherry_tomatoes": {
+    "name": "Cherry Tomatoes",
+    "category": "Veggie",
+    "kcal": 18,
+    "protein": 0.9,
+    "carbs": 3.9,
+    "fat": 0.2,
+    "fiber": 1.2
+  },
+  "paneer_tikka": {
+    "name": "Grilled Paneer Tikka Cubes",
+    "category": "Protein",
+    "kcal": 265,
+    "protein": 18.5,
+    "carbs": 4.2,
+    "fat": 19.8,
+    "fiber": 0.6
+  },
+  "dal_tadka": {
+    "name": "Yellow Dal Tadka (Lentils)",
+    "category": "Protein",
+    "kcal": 112,
+    "protein": 6.2,
+    "carbs": 14.8,
+    "fat": 3.2,
+    "fiber": 3.8
+  },
+  "brown_rice": {
+    "name": "Steamed Brown Basmati Rice",
+    "category": "Carb",
+    "kcal": 123,
+    "protein": 2.7,
+    "carbs": 25.6,
+    "fat": 1.0,
+    "fiber": 1.8
+  },
+  "whole_wheat_roti": {
+    "name": "Whole Wheat Phulka / Chapati",
+    "category": "Carb",
+    "kcal": 245,
+    "protein": 7.8,
+    "carbs": 48.0,
+    "fat": 2.4,
+    "fiber": 6.5
+  },
+  "kachumber_salad": {
+    "name": "Cucumber Tomato Kachumber Salad",
+    "category": "Veggie",
+    "kcal": 22,
+    "protein": 0.8,
+    "carbs": 4.5,
+    "fat": 0.2,
+    "fiber": 1.4
+  },
+  "cooked_oats": {
+    "name": "Cooked Rolled Oatmeal (with Milk)",
+    "category": "Carb",
+    "kcal": 95,
+    "protein": 4.1,
+    "carbs": 15.2,
+    "fat": 2.1,
+    "fiber": 2.6
+  },
+  "banana_slices": {
+    "name": "Sliced Ripe Banana",
+    "category": "Carb",
+    "kcal": 89,
+    "protein": 1.1,
+    "carbs": 22.8,
+    "fat": 0.3,
+    "fiber": 2.6
+  },
+  "mixed_berries": {
+    "name": "Strawberries & Blueberries",
+    "category": "Veggie",
+    "kcal": 42,
+    "protein": 0.7,
+    "carbs": 10.2,
+    "fat": 0.3,
+    "fiber": 2.2
+  },
+  "sliced_almonds": {
+    "name": "Toasted Sliced Almonds",
+    "category": "Healthy Fat",
+    "kcal": 579,
+    "protein": 21.2,
+    "carbs": 21.6,
+    "fat": 49.9,
+    "fiber": 12.5
+  },
+  "chia_seeds": {
+    "name": "Organic Chia Seeds",
+    "category": "Healthy Fat",
+    "kcal": 486,
+    "protein": 16.5,
+    "carbs": 42.1,
+    "fat": 30.7,
+    "fiber": 34.4
+  },
+  "biryani_rice": {
+    "name": "Spiced Basmati Biryani Rice",
+    "category": "Carb",
+    "kcal": 158,
+    "protein": 3.5,
+    "carbs": 28.4,
+    "fat": 3.4,
+    "fiber": 1.2
+  },
+  "curd_raita": {
+    "name": "Cucumber Yogurt Raita",
+    "category": "Protein",
+    "kcal": 62,
+    "protein": 3.6,
+    "carbs": 4.8,
+    "fat": 3.1,
+    "fiber": 0.4
+  },
+  "grilled_salmon": {
+    "name": "Grilled Atlantic Salmon",
+    "category": "Protein",
+    "kcal": 208,
+    "protein": 20.4,
+    "carbs": 0.0,
+    "fat": 13.4,
+    "fiber": 0.0
+  },
+  "boiled_chickpeas": {
+    "name": "Boiled Chickpeas / Sundal",
+    "category": "Protein",
+    "kcal": 164,
+    "protein": 8.9,
+    "carbs": 27.4,
+    "fat": 2.6,
+    "fiber": 7.6
+  },
+  "whey_scoop": {
+    "name": "Whey Protein Isolate",
+    "category": "Protein",
+    "kcal": 375,
+    "protein": 82.0,
+    "carbs": 5.0,
+    "fat": 3.0,
+    "fiber": 0.0
+  },
+  "peanut_butter": {
+    "name": "Natural Peanut Butter",
+    "category": "Healthy Fat",
+    "kcal": 588,
+    "protein": 25.0,
+    "carbs": 20.0,
+    "fat": 50.0,
+    "fiber": 6.0
+  },
+  "ghee_oil": {
+    "name": "Cooking Oil / Cow Ghee (1 tsp = 5g)",
+    "category": "Healthy Fat",
+    "kcal": 884,
+    "protein": 0.0,
+    "carbs": 0.0,
+    "fat": 100.0,
+    "fiber": 0.0
+  },
+  "burger_patty_bun": {
+    "name": "Cheese Burger (Bun, Patty, Cheese, Sauce)",
+    "category": "Carb",
+    "kcal": 295,
+    "protein": 14.5,
+    "carbs": 26.0,
+    "fat": 14.8,
+    "fiber": 1.5
+  },
+  "french_fries": {
+    "name": "Crispy French Fries",
+    "category": "Carb",
+    "kcal": 312,
+    "protein": 3.4,
+    "carbs": 41.0,
+    "fat": 15.0,
+    "fiber": 3.8
+  }
+}

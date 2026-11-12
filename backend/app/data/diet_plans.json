@@ -1,0 +1,34 @@
+{
+  "weight_loss": {
+    "kcal": 1600,
+    "protein": 130,
+    "carbs": 140,
+    "fat": 55,
+    "title": "🔥 Fat Loss & Lean Deficit Plan",
+    "description": "High protein to preserve muscle while keeping calories in a steady deficit."
+  },
+  "balanced": {
+    "kcal": 2000,
+    "protein": 130,
+    "carbs": 210,
+    "fat": 65,
+    "title": "⚖️ Balanced Smart Maintenance (Default)",
+    "description": "Ideal for steady daily energy, gut health, and clean whole-food nutrition."
+  },
+  "muscle_gain": {
+    "kcal": 2450,
+    "protein": 180,
+    "carbs": 260,
+    "fat": 75,
+    "title": "💪 Muscle Hypertrophy & Strength Bulk",
+    "description": "Surplus calories and 180g protein to fuel strength training and recovery."
+  },
+  "low_carb": {
+    "kcal": 1750,
+    "protein": 140,
+    "carbs": 75,
+    "fat": 100,
+    "title": "🥑 Low-Carb / Glycemic Control Plan",
+    "description": "Keeps net carbs low to minimize blood sugar spikes after meals."
+  }
+}
