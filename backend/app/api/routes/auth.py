@@ -245,7 +245,13 @@ def reset_password(
 
 @router.get("/dev/latest-code")
 def get_dev_code(email: str) -> dict:
-    """Dev helper: view the latest verification code generated for an email."""
+    """Dev helper: view the latest verification code generated for an email.
+
+    Only exists while no SMTP server is configured (codes are then never emailed, so this is the
+    only way to complete a reset locally). With SMTP set up it would let anyone reset any password.
+    """
+    if get_settings().smtp_host:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found.")
     code = get_latest_dev_code(email)
     return {"email": email, "code": code}
 

@@ -149,12 +149,30 @@ async def verify_google_token(credential: str) -> dict:
     if resp.status_code != 200:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Google token.")
 
-    payload = resp.json()
+    return check_google_payload(resp.json(), settings.google_client_id)
 
-    # Verify audience matches our client ID (if configured)
-    if settings.google_client_id and payload.get("aud") != settings.google_client_id:
+
+GOOGLE_ISSUERS = {"accounts.google.com", "https://accounts.google.com"}
+
+
+def check_google_payload(payload: dict, client_id: str) -> dict:
+    """Accept a Google tokeninfo payload only if it was issued by Google, for this app, for a verified email.
+
+    Without these checks a token minted for any other app (or an unverified address) could sign in as
+    the matching local account.
+    """
+    if not client_id:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Google sign-in is not configured on this server (GOOGLE_CLIENT_ID is empty).",
+        )
+    if payload.get("aud") != client_id:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Google token audience mismatch.")
-
+    if payload.get("iss") not in GOOGLE_ISSUERS:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Google token issuer mismatch.")
+    # tokeninfo returns booleans as strings.
+    if str(payload.get("email_verified", "")).lower() != "true" or not payload.get("email"):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Google account email is not verified.")
     return payload
 
 

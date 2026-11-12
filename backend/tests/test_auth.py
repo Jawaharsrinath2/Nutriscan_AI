@@ -308,3 +308,51 @@ def test_dynamic_email_template_rendering():
     assert "123456" in sub2
     assert "123456" in html2
     assert "123456" in text2
+
+
+# ── security: dev code helper and Google token checks ───────────────────────
+
+
+def _with_smtp(monkeypatch, host):
+    from app.config import get_settings
+
+    monkeypatch.setattr(get_settings(), "smtp_host", host)
+
+
+def test_dev_code_helper_only_exists_without_smtp(client, monkeypatch):
+    from app.services import email_service
+
+    _with_smtp(monkeypatch, "")
+    email_service.send_password_reset_email("a@b.com", "a", "123456")
+    assert client.get("/api/auth/dev/latest-code", params={"email": "a@b.com"}).json()["code"] == "123456"
+
+    _with_smtp(monkeypatch, "smtp.example.com")
+    monkeypatch.setattr(email_service, "send_email", lambda *a, **k: True)
+    email_service.send_password_reset_email("c@d.com", "c", "654321")
+    assert client.get("/api/auth/dev/latest-code", params={"email": "c@d.com"}).status_code == 404
+    assert email_service.get_latest_dev_code("c@d.com") is None
+
+
+GOOD_GOOGLE = {"aud": "client-1", "iss": "https://accounts.google.com", "email": "g@gmail.com", "email_verified": "true"}
+
+
+def test_google_payload_accepted_when_fully_valid():
+    assert auth_service.check_google_payload(GOOD_GOOGLE, "client-1") is GOOD_GOOGLE
+
+
+@pytest.mark.parametrize(
+    "client_id, changes, code",
+    [
+        ("", {}, 503),  # Google sign-in not configured → refuse, never skip the audience check
+        ("client-1", {"aud": "other-app"}, 401),
+        ("client-1", {"iss": "https://evil.example"}, 401),
+        ("client-1", {"email_verified": "false"}, 401),
+        ("client-1", {"email": ""}, 401),
+    ],
+)
+def test_google_payload_rejected(client_id, changes, code):
+    from fastapi import HTTPException
+
+    with pytest.raises(HTTPException) as err:
+        auth_service.check_google_payload({**GOOD_GOOGLE, **changes}, client_id)
+    assert err.value.status_code == code

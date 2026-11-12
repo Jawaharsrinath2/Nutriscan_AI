@@ -151,7 +151,9 @@ def send_welcome_email(to_email: str, username: str) -> bool:
 
 def send_password_reset_email(to_email: str, username: str, code: str, expiry_minutes: int = 15) -> bool:
     """Send the 6-digit password reset verification code email."""
-    _latest_dev_codes[to_email.lower()] = code
+    if not get_settings().smtp_host:
+        # Mock mode only: the code is never emailed, so expose it to the dev helper endpoint.
+        _latest_dev_codes[to_email.lower()] = code
     context = {
         "username": username,
         "email": to_email,
