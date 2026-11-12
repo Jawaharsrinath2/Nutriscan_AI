@@ -56,6 +56,14 @@ then the goal's deficit/surplus, protein per kg and fat share. The numbers are d
 unit-tested; AI never picks them. Targets can be overridden by hand on the Goals tab and restored
 with "Use formula". Profile edits (e.g. a weigh-in) recompute targets unless they were overridden.
 
+**Diet and workout plans** (`/api/plans`): after onboarding, Gemini writes a one-day South Indian
+diet plan around the fixed targets and a weekly workout plan from the training answers
+(`backend/app/services/plan_writer.py`, structured JSON output, `GEMINI_PLAN_TIMEOUT_S` per model
+with the same fallback models). Without a key, or when the AI fails, a template plan built from the
+person's targets and the dish catalogue is stored instead (`default_plans.py`) and the card says so.
+Plans are regenerated manually from the Goals tab (6 AI generations per hour per user); a plan is
+flagged stale when weight changes by ≥ 2 kg, the goal changes, or the calorie target moves ≥ 100 kcal.
+
 ## Photo detection
 
 The old app guessed dishes from file names and pixel colours, and its pins were hard-coded.

@@ -1,6 +1,8 @@
 import CustomTargetsForm from "../components/goals/CustomTargetsForm";
 import ProfileCard from "../components/goals/ProfileCard";
 import TargetsCard from "../components/goals/TargetsCard";
+import DietPlanCard from "../components/plans/DietPlanCard";
+import WorkoutPlanCard from "../components/plans/WorkoutPlanCard";
 
 export default function GoalsView({ visible, onEditProfile }) {
   return (
@@ -11,6 +13,10 @@ export default function GoalsView({ visible, onEditProfile }) {
           <TargetsCard />
           <CustomTargetsForm />
         </div>
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <DietPlanCard />
+        <WorkoutPlanCard />
       </div>
     </section>
   );

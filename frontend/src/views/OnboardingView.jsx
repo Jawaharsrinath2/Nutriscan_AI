@@ -1,4 +1,5 @@
 import { useState } from "react";
+import PlanReady from "../components/onboarding/PlanReady";
 import { STEPS } from "../components/onboarding/steps";
 import { useAppState } from "../context/AppState";
 import { EMPTY_PROFILE, toApiProfile } from "../lib/profileOptions";
@@ -23,6 +24,7 @@ export default function OnboardingView({ initialStep = 0, editing = false, onDon
   const [step, setStep] = useState(Math.min(initialStep, STEPS.length - 1));
   const [form, setForm] = useState(() => fromSaved(profile?.profile));
   const [saving, setSaving] = useState(false);
+  const [phase, setPhase] = useState("form"); // "form" | "plan" (the "Plan ready" screen after first onboarding)
 
   const current = STEPS[step];
   const last = step === STEPS.length - 1;
@@ -33,8 +35,16 @@ export default function OnboardingView({ initialStep = 0, editing = false, onDon
     setSaving(true);
     const saved = await actions.saveProfile(toApiProfile(form));
     setSaving(false);
-    if (saved) onDone();
+    if (!saved) return;
+    if (editing) {
+      onDone(); // existing plans go stale and the Goals tab offers Regenerate
+      return;
+    }
+    setPhase("plan");
+    actions.generatePlans("both");
   };
+
+  if (phase === "plan") return <PlanReady onDone={onDone} />;
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">

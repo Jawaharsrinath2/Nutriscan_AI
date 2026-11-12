@@ -23,6 +23,7 @@ class Settings(BaseSettings):
     # Tried in order when the main model times out, is overloaded or rate-limited.
     gemini_fallback_models: list[str] = ["gemini-3.5-flash", "gemini-3-flash-preview"]
     gemini_timeout_s: int = 30  # per model, so a model that never answers can't hang the scan
+    gemini_plan_timeout_s: int = 90  # plans are long answers; per model
 
     yolo_weights: Path = Path("models/food_yolo.pt")
     yolo_min_score: float = 0.35

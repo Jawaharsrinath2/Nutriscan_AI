@@ -86,6 +86,21 @@ class UserProfile(Base):
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
 
+class AiPlan(Base):
+    """A generated diet or workout plan. Old versions are kept; the newest per kind is shown."""
+
+    __tablename__ = "ai_plans"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    user_id: Mapped[int] = mapped_column(Integer, index=True, nullable=False)
+    kind: Mapped[str] = mapped_column(String(16), index=True)  # diet | workout
+    source: Mapped[str] = mapped_column(String(16))  # ai | default
+    model: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    content: Mapped[dict] = mapped_column(JSON)
+    inputs: Mapped[dict] = mapped_column(JSON)  # weight/targets the plan was written for (staleness check)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+
 class PasswordResetCode(Base):
     __tablename__ = "password_reset_codes"
 

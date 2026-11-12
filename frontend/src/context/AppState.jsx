@@ -3,6 +3,7 @@ import { fetchDishes, fetchIngredients } from "../api/foodsApi";
 import { fetchPlans, saveCustomGoals } from "../api/goalsApi";
 import { clearToday, deleteMeal, fetchToday, logMeal } from "../api/mealsApi";
 import { autoFitPlate } from "../api/nutritionApi";
+import { fetchPlans as fetchAiPlans, generatePlans } from "../api/plansApi"; // goalsApi's fetchPlans = preset diet plans
 import { fetchProfile, previewTargets, recalculateTargets, saveProfile } from "../api/profileApi";
 import { scanPhoto } from "../api/scanApi";
 import { fetchVision, setVisionMode } from "../api/visionApi";
@@ -25,6 +26,8 @@ export function AppStateProvider({ children }) {
   const [catalog, setCatalog] = useState(null);
   const [targets, setTargets] = useState(null);
   const [profile, setProfile] = useState(null); // ProfileResponse; profile.profile is null until onboarded
+  const [plans, setPlans] = useState(null); // PlansResponse
+  const [generating, setGenerating] = useState(null); // "diet" | "workout" | "both" | null
   const [day, setDay] = useState(null);
   const [water, setWaterState] = useState(null);
   const [vision, setVision] = useState(null);
@@ -56,6 +59,7 @@ export function AppStateProvider({ children }) {
     if (!user) {
       setTargets(null);
       setProfile(null);
+      setPlans(null);
       setDay(null);
       setWaterState(null);
       // The plate is client-side state; the next person to sign in must not inherit it.
@@ -63,10 +67,11 @@ export function AppStateProvider({ children }) {
       return;
     }
     let cancelled = false;
-    Promise.all([fetchProfile(), fetchToday(), fetchWater()])
-      .then(([profileState, today, waterState]) => {
+    Promise.all([fetchProfile(), fetchAiPlans(), fetchToday(), fetchWater()])
+      .then(([profileState, planState, today, waterState]) => {
         if (cancelled) return;
         setProfile(profileState);
+        setPlans(planState);
         setTargets(profileState.targets);
         setDay(today);
         setWaterState(waterState);
@@ -77,7 +82,7 @@ export function AppStateProvider({ children }) {
     };
   }, [user?.id]);
 
-  const ready = catalog !== null && profile !== null && day !== null && water !== null;
+  const ready = catalog !== null && profile !== null && plans !== null && day !== null && water !== null;
   const needsOnboarding = ready && profile.profile === null;
   const { evaluation } = useEvaluate(plate.items, ready, [day, targets]);
 
@@ -192,6 +197,18 @@ export function AppStateProvider({ children }) {
       }),
       // No toast: the "Your numbers" step calls this on every slider move.
       previewTargets: (data, signal) => previewTargets(data, signal),
+      generatePlans: guarded(async (kind = "both") => {
+        setGenerating(kind);
+        try {
+          const state = await generatePlans(kind);
+          setPlans(state);
+          if (state.ai_error) showToast("The AI couldn't answer, so a template plan is shown. Try Regenerate in a minute.", "⚠️");
+          else showToast(state.ai_ready ? "Your plan is ready!" : "Template plan created (no AI key set).", "✨");
+          return state;
+        } finally {
+          setGenerating(null);
+        }
+      }),
       recalculateTargets: guarded(async () => {
         const state = await recalculateTargets();
         setProfile(state);
@@ -224,7 +241,7 @@ export function AppStateProvider({ children }) {
   }, [catalog, showToast]);
 
   const value = {
-    ready, needsOnboarding, loadError, catalog, targets, profile, day, water, vision, plate, evaluation, scanning, confirmWeightsOpen, actions,
+    ready, needsOnboarding, loadError, catalog, targets, profile, plans, generating, day, water, vision, plate, evaluation, scanning, confirmWeightsOpen, actions,
   };
   return <AppStateContext.Provider value={value}>{children}</AppStateContext.Provider>;
 }
