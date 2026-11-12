@@ -72,7 +72,7 @@ def test_gemini_failures_reach_the_client_as_short_reasons(repo):
     from app.config import get_settings
     from app.services.plan_writer import GeminiPlanWriter
 
-    writer = GeminiPlanWriter(get_settings(), repo)
+    writer = GeminiPlanWriter(get_settings().model_copy(update={"gemini_api_key": "test-key"}), repo)
     writer._timeout_s, writer._models = 9, ["a", "b"]
     boom = ServerError(503, {"error": {"message": "secret internal detail https://example.internal/x"}})
     writer._client = SimpleNamespace(models=SimpleNamespace(generate_content=Mock(side_effect=[httpx.ReadTimeout("t"), boom])))
