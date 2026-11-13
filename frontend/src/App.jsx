@@ -1,12 +1,10 @@
-import { useEffect, useState } from "react";
-import StatusCard from "./components/common/StatusCard";
-import Header from "./components/layout/Header";
-import CameraModal from "./components/modals/CameraModal";
-import ConfirmWeightsModal from "./components/modals/ConfirmWeightsModal";
-import VisionModeModal from "./components/modals/VisionModeModal";
+import { useRef } from "react";
+import { Navigate, Route, Routes, useNavigate, useParams } from "react-router-dom";
+import AppLayout from "./components/layout/AppLayout";
 import { useAuth } from "./context/AuthContext";
 import { useAppState } from "./context/AppState";
-import { useCamera } from "./hooks/useCamera";
+import { usePageTitle } from "./hooks/usePageTitle";
+import { HOME, PATHS } from "./lib/paths";
 import AuthView from "./views/AuthView";
 import GoalsView from "./views/GoalsView";
 import LandingView from "./views/LandingView";
@@ -27,117 +25,106 @@ function LoadingScreen() {
   );
 }
 
-export default function App() {
-  const { user, loading: authLoading } = useAuth();
-  const { ready, needsOnboarding, loadError, confirmWeightsOpen, actions } = useAppState();
-  const [tab, setTab] = useState("scanner");
-  const [authView, setAuthView] = useState({ open: false, mode: "login" });
-  const [visionOpen, setVisionOpen] = useState(false);
-  const [editStep, setEditStep] = useState(null); // onboarding step opened from the Goals tab, or null
-  // First-run onboarding stays mounted through the "Writing your plan" / "Plan ready" screens, which come
-  // after the profile is saved (when needsOnboarding has already turned false).
-  const [firstRun, setFirstRun] = useState(false);
-  const camera = useCamera();
+// ── route guards ─────────────────────────────────────────────────────────────
 
-  useEffect(() => {
-    if (needsOnboarding) setFirstRun(true);
-  }, [needsOnboarding]);
+/** Pages that need a signed-in user. Signing out (from anywhere) lands on the landing page. */
+function RequireUser({ children }) {
+  const { user, loading } = useAuth();
+  if (loading) return <LoadingScreen />;
+  return user ? children : <Navigate to={PATHS.landing} replace />;
+}
 
-  // Signing out lands on the landing page, not on whichever auth form was used to sign in.
-  useEffect(() => {
-    if (!user) {
-      setAuthView({ open: false, mode: "login" });
-      setTab("scanner");
-      setEditStep(null);
-      setFirstRun(false);
-    }
-  }, [user]);
+/** Login and signup: a signed-in person goes straight to the app. */
+function SignedOutOnly({ children }) {
+  const { user, loading } = useAuth();
+  if (loading) return <LoadingScreen />;
+  return user ? <Navigate to={HOME} replace /> : children;
+}
 
-  // Auth loading state
-  if (authLoading) return <LoadingScreen />;
+// ── pages ────────────────────────────────────────────────────────────────────
 
-  // Not authenticated: Show either Landing page or Auth form
-  if (!user) {
-    if (authView.open) {
-      return (
-        <AuthView
-          initialMode={authView.mode}
-          onBack={() => setAuthView({ open: false, mode: "login" })}
-        />
-      );
-    }
-    return (
-      <LandingView
-        onGetStarted={() => setAuthView({ open: true, mode: "signup" })}
-        onSignIn={() => setAuthView({ open: true, mode: "login" })}
-        isAuthenticated={false}
-      />
-    );
-  }
-
-  // First sign-in: collect the profile before anything else. Later: the same stepper edits it.
-  if (ready && (needsOnboarding || firstRun || editStep !== null)) {
-    const editing = !firstRun && !needsOnboarding && editStep !== null;
-    return (
-      <OnboardingView
-        key={editing ? `edit-${editStep}` : "onboard"}
-        initialStep={editing ? editStep : 0}
-        editing={editing}
-        onDone={() => {
-          setFirstRun(false);
-          setEditStep(null);
-          setTab(editing ? "goals" : "scanner");
-        }}
-        onCancel={() => setEditStep(null)}
-      />
-    );
-  }
-
-  const captureFromCamera = async () => {
-    const blob = await camera.captureFrame();
-    if (!blob) {
-      // No live stream: fall back to the device camera / gallery picker.
-      document.getElementById("cameraCaptureInput").click();
-      return;
-    }
-    camera.closeCamera();
-    actions.scanBlob(blob);
-  };
-
-  // Authenticated user viewing Landing page
-  if (tab === "landing") {
-    return (
-      <>
-        <Header activeTab={tab} onTabChange={setTab} onOpenVision={() => setVisionOpen(true)} />
-        <LandingView
-          isAuthenticated={true}
-          onGoToApp={() => setTab("scanner")}
-          onGetStarted={() => setTab("scanner")}
-          onSignIn={() => setTab("scanner")}
-        />
-      </>
-    );
-  }
-
+function LandingPage() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  usePageTitle(null);
   return (
-    <>
-      <Header activeTab={tab} onTabChange={setTab} onOpenVision={() => setVisionOpen(true)} />
+    <LandingView
+      isAuthenticated={!!user}
+      onGoToApp={() => navigate(HOME)}
+      onGetStarted={() => navigate(user ? HOME : PATHS.signup)}
+      onSignIn={() => navigate(user ? HOME : PATHS.login)}
+    />
+  );
+}
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 space-y-6">
-        {ready ? (
-          <>
-            <ScannerView visible={tab === "scanner"} onOpenCamera={camera.openCamera} onCloseCamera={camera.closeCamera} />
-            <TrackerView visible={tab === "tracker"} />
-            <GoalsView visible={tab === "goals"} onEditProfile={setEditStep} />
-          </>
-        ) : (
-          <StatusCard error={loadError} />
-        )}
-      </main>
+function AuthPage({ mode }) {
+  const navigate = useNavigate();
+  usePageTitle(mode === "signup" ? "Create account" : "Sign in");
+  return (
+    <AuthView
+      initialMode={mode}
+      onModeChange={(next) => navigate(next === "signup" ? PATHS.signup : PATHS.login, { replace: true })}
+      onBack={() => navigate(PATHS.landing)}
+    />
+  );
+}
 
-      <CameraModal camera={camera} onCapture={captureFromCamera} />
-      <VisionModeModal open={visionOpen} onClose={() => setVisionOpen(false)} />
-      <ConfirmWeightsModal open={confirmWeightsOpen} onClose={actions.closeConfirmWeights} />
-    </>
+/** First-run questionnaire. Stays mounted through "Writing your plan" / "Plan ready", which come after the
+ *  profile is saved (when needsOnboarding has already turned false); only a fresh visit by an onboarded
+ *  person is sent to the app. */
+function OnboardingPage() {
+  const { ready, needsOnboarding } = useAppState();
+  const navigate = useNavigate();
+  const startedHere = useRef(false);
+  usePageTitle("Set up your plan");
+  if (needsOnboarding) startedHere.current = true;
+  if (!ready) return <LoadingScreen />;
+  if (!needsOnboarding && !startedHere.current) return <Navigate to={HOME} replace />;
+  return <OnboardingView key="onboard" onDone={() => navigate(HOME, { replace: true })} />;
+}
+
+/** The same stepper, opened at one step from the Goals page to edit the saved profile. */
+function ProfileEditPage() {
+  const { ready, needsOnboarding } = useAppState();
+  const { step } = useParams();
+  const navigate = useNavigate();
+  usePageTitle("Edit profile");
+  if (!ready) return <LoadingScreen />;
+  if (needsOnboarding) return <Navigate to={PATHS.onboarding} replace />;
+  const initialStep = Math.max(0, Number.parseInt(step, 10) || 0);
+  return (
+    <OnboardingView
+      key={`edit-${initialStep}`}
+      initialStep={initialStep}
+      editing
+      onDone={() => navigate(PATHS.dietPlan)}
+      onCancel={() => navigate(PATHS.dietPlan)}
+    />
+  );
+}
+
+function Titled({ title, children }) {
+  usePageTitle(title);
+  return children;
+}
+
+export default function App() {
+  return (
+    <Routes>
+      <Route path={PATHS.landing} element={<LandingPage />} />
+      <Route path={PATHS.login} element={<SignedOutOnly><AuthPage mode="login" /></SignedOutOnly>} />
+      <Route path={PATHS.signup} element={<SignedOutOnly><AuthPage mode="signup" /></SignedOutOnly>} />
+
+      <Route path={PATHS.onboarding} element={<RequireUser><OnboardingPage /></RequireUser>} />
+      <Route path={PATHS.profileEdit(":step")} element={<RequireUser><ProfileEditPage /></RequireUser>} />
+
+      <Route element={<RequireUser><AppLayout /></RequireUser>}>
+        <Route path={PATHS.scan} element={<Titled title="Food Scanner"><ScannerView /></Titled>} />
+        <Route path={PATHS.dashboard} element={<Titled title="Daily Diet Log"><TrackerView /></Titled>} />
+        <Route path={PATHS.dietPlan} element={<Titled title="Diet Plan & Goals"><GoalsView /></Titled>} />
+      </Route>
+
+      <Route path="*" element={<Navigate to={PATHS.landing} replace />} />
+    </Routes>
   );
 }

@@ -1,11 +1,13 @@
+import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useAppState } from "../../context/AppState";
 import { fmt } from "../../lib/format";
+import { PATHS } from "../../lib/paths";
 import TabNav from "./TabNav";
 
 const MODE_SHORT_LABEL = { gemini: "Gemini Vision", yolo: "YOLO Vision", none: "Manual Mode" };
 
-export default function Header({ activeTab, onTabChange, onOpenVision }) {
+export default function Header({ onOpenVision }) {
   const { user, logout } = useAuth();
   const { day, evaluation, vision } = useAppState();
   const remaining = evaluation?.remaining;
@@ -13,11 +15,7 @@ export default function Header({ activeTab, onTabChange, onOpenVision }) {
   return (
     <header className="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
-        <div
-          className="flex items-center gap-3 cursor-pointer select-none group"
-          onClick={() => onTabChange(activeTab === "landing" ? "scanner" : "landing")}
-          title={activeTab === "landing" ? "Back to Dashboard" : "View Landing Page"}
-        >
+        <Link to={PATHS.landing} className="flex items-center gap-3 select-none group" title="View Landing Page">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white shadow-sm group-hover:scale-105 transition-transform">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 7V5a2 2 0 012-2h2m10 0h2a2 2 0 012 2v2m0 10v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2m9-10a4 4 0 100 8 4 4 0 000-8z" />
@@ -34,9 +32,9 @@ export default function Header({ activeTab, onTabChange, onOpenVision }) {
               Snap or upload your plate before eating to inspect ingredients, calories, protein &amp; diet fit
             </p>
           </div>
-        </div>
+        </Link>
 
-        <TabNav activeTab={activeTab} onChange={onTabChange} mealCount={day?.meals.length ?? 0} />
+        <TabNav mealCount={day?.meals.length ?? 0} />
 
         <div className="flex items-center gap-2">
           <div className="hidden md:flex items-center gap-3 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl text-xs">

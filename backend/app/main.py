@@ -1,10 +1,11 @@
 """FastAPI entry point: `uvicorn app.main:app --reload` from the backend folder."""
 
 from contextlib import asynccontextmanager
+from pathlib import Path
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.api.routes import ALL_ROUTERS
@@ -47,9 +48,25 @@ def create_app() -> FastAPI:
 
     # After `npm run build`, the backend can serve the whole app from one port.
     if FRONTEND_DIST.is_dir():
-        app.mount("/", StaticFiles(directory=FRONTEND_DIST, html=True), name="frontend")
+        mount_frontend(app, FRONTEND_DIST)
 
     return app
+
+
+def mount_frontend(app: FastAPI, dist: Path) -> None:
+    """Serve the built single-page app: real files as they are, every other path as index.html so that
+    /scan, /dashboard, /dietplan... work on reload and as deep links. Unknown /api paths stay JSON 404."""
+    dist = dist.resolve()
+    index = dist / "index.html"
+
+    @app.get("/{path:path}", include_in_schema=False)
+    def frontend(path: str):
+        if path == "api" or path.startswith("api/"):
+            raise HTTPException(status_code=404, detail="Not Found")
+        target = (dist / path).resolve()
+        if path and target.is_file() and dist in target.parents:
+            return FileResponse(target)
+        return FileResponse(index)
 
 
 app = create_app()

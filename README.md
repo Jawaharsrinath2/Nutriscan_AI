@@ -40,7 +40,23 @@ $env:NUTRISCAN_API_URL="http://127.0.0.1:8010"; npm run dev
 ### Single-server mode
 
 `npm run build` in `frontend/` creates `frontend/dist`. The backend then serves the whole app at
-http://127.0.0.1:8000/ — no Node needed to run it.
+http://127.0.0.1:8000/ — no Node needed to run it. Every non-`/api` path that is not a real file
+returns `index.html`, so the app's routes work on reload and as deep links.
+
+## Pages
+
+| URL | Page |
+|---|---|
+| `/` | Landing page (signed-in users get a "Go to app" button) |
+| `/login`, `/signup` | Sign in / create account; a signed-in person is sent to `/scan` |
+| `/onboarding` | First-run questionnaire and the "plan ready" screen |
+| `/profile/edit/:step` | The same stepper opened at one step from the Goals page |
+| `/scan` | Food Scanner (home after sign-in) |
+| `/dashboard` | Daily Diet Log: today's meals, progress chart, water |
+| `/dietplan` | Diet Plan & Goals: profile, targets, diet and workout plans |
+
+Routes are declared in `frontend/src/App.jsx`; the URL strings live in `frontend/src/lib/paths.js`.
+Signed-out visitors to an app page are sent to `/`; signing out from any page lands on `/`.
 
 ## Accounts
 
@@ -109,12 +125,14 @@ backend/scripts/extract_legacy.py   one-time migration from the old HTML (alread
 backend/tests/              pytest suite
 
 frontend/src/
+  App.jsx                   routes and route guards (react-router)
   api/                      one module per backend route group
   context/AppState.jsx      app state + actions
-  lib/plateReducer.js       plate editing logic
-  hooks/                    useEvaluate (debounced), useCamera, useToast
-  views/                    ScannerView, TrackerView, GoalsView
-  components/               layout, scanner, report, ingredients, tracker, goals, modals, common
+  lib/paths.js              URL constants;  lib/plateReducer.js  plate editing logic
+  hooks/                    useEvaluate (debounced), useCamera, useToast, usePageTitle
+  views/                    one component per page: Landing, Auth, Onboarding, Scanner, Tracker, Goals
+  components/               layout (AppLayout, Header, TabNav), scanner, report, ingredients, tracker,
+                            goals, plans, onboarding, modals, common
 ```
 
 ## Tests

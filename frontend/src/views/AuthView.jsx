@@ -75,7 +75,7 @@ const features = [
 
 /* ── AuthView Component ────────────────────────────────────────────────── */
 
-export default function AuthView({ initialMode = "login", onBack }) {
+export default function AuthView({ initialMode = "login", onBack, onModeChange }) {
   const { saveAuth } = useAuth();
   const [mode, setMode] = useState(initialMode); // "login" | "signup" | "forgot_password"
   const [form, setForm] = useState({ email: "", username: "", password: "" });
@@ -268,7 +268,9 @@ export default function AuthView({ initialMode = "login", onBack }) {
   };
 
   const switchMode = () => {
-    setMode((m) => (m === "login" ? "signup" : "login"));
+    const next = mode === "login" ? "signup" : "login";
+    setMode(next);
+    onModeChange?.(next); // keeps /login and /signup in the address bar
     setError("");
     setSuccessMsg("");
     setFieldErrors({});
