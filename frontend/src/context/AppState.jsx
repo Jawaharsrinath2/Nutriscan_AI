@@ -97,7 +97,8 @@ export function AppStateProvider({ children }) {
     };
     const refreshDay = async () => setDay(await fetchToday());
     // Staleness is judged on the server against the current weight/goal/targets, so re-read plans after those change.
-    const refreshPlans = async () => setPlans(await fetchAiPlans());
+    // Non-fatal: the save itself succeeded, and a reload shows the right stale flags anyway.
+    const refreshPlans = () => fetchAiPlans().then(setPlans).catch(() => {});
 
     const loadDish = (key, { usePresetPhoto = false, toast } = {}) => {
       const dish = catalog?.dishes[key];
