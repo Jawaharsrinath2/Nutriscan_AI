@@ -46,6 +46,30 @@ def test_plan_prompts_render_for_every_training_setting(profile, repo):
     assert ("home with no equipment" in workout) == (not profile.gym and profile.home_workouts)
 
 
-def test_a_missing_placeholder_is_an_error_not_a_half_filled_prompt():
-    with pytest.raises(KeyError):
-        prompts.render("workout_plan", profile="x", setting="y")  # goal forgotten
+def test_placeholder_mismatches_are_errors_not_half_filled_prompts(monkeypatch):
+    with pytest.raises(prompts.PromptError, match="does not fill: \\['goal'\\]"):
+        prompts.render("workout_plan", profile="x", setting="y")  # goal forgotten by the code
+    # The file dropped ${carbs} (an edit that would silently lose data): every supplied value must be used.
+    monkeypatch.setattr(prompts, "read", lambda name: "calories ${kcal} kcal, protein ${protein} g.")
+    with pytest.raises(prompts.PromptError, match="no longer uses: \\['carbs'\\]"):
+        prompts.render("diet_plan", kcal=1, protein=2, carbs=3)
+    monkeypatch.setattr(prompts, "read", lambda name: "costs $5")
+    with pytest.raises(prompts.PromptError):
+        prompts.render("diet_plan")
+
+
+def test_broken_prompt_files_reach_the_user_as_app_errors(monkeypatch, repo):
+    """A bad edit must surface as a scan failure / template fallback, not a 500."""
+    from app.config import get_settings
+    from app.services.plan_writer import GeminiPlanWriter, PlanGenerationError
+    from app.vision.base import DetectorError
+    from app.vision.gemini_detector import GeminiDetector
+    from PIL import Image
+
+    monkeypatch.setattr(prompts, "read", lambda name: "no placeholders at all")
+    writer = GeminiPlanWriter(get_settings().model_copy(update={"gemini_api_key": "test-key"}), repo)
+    with pytest.raises(PlanGenerationError, match="workout_plan.txt"):
+        writer.write_workout(PROFILES[0])
+    detector = GeminiDetector("test-key", "m", repo.ingredients)
+    with pytest.raises(DetectorError, match="food_detection.txt"):
+        detector.detect(Image.new("RGB", (64, 64)))

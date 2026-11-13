@@ -4,9 +4,11 @@ Plain-text templates sent to Gemini. Edit the `.txt` files directly; they are re
 so changes apply to the next scan or plan without restarting the backend. Everything in a file is
 sent to the model, so do not add comments inside the prompts.
 
-Placeholders are `${name}` and are filled by the code listed below. Do not rename or remove them
-(the backend raises `KeyError` if one it supplies is missing from the file, or `ValueError` if the
-file uses one it does not supply). A literal dollar sign must be written `$$`.
+Placeholders are `${name}` and are filled by the code listed below. Do not rename or remove them:
+rendering is strict both ways, so a file that drops a placeholder the code supplies, or adds one the
+code does not know, fails with `PromptError` naming the file and the placeholder. The photo scan then
+reports the scan as failed and plan generation falls back to a template plan with that reason, rather
+than sending Gemini a half-filled prompt. A literal dollar sign must be written `$$`.
 
 | File | Used by | Placeholders |
 |---|---|---|

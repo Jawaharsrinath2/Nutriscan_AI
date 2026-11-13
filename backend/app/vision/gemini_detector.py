@@ -109,6 +109,11 @@ class GeminiDetector(Detector):
         return json.loads(response.text or "{}")
 
     def detect(self, image: Image.Image) -> DetectionResult:
+        try:
+            detection_prompt(self._ingredients)  # fail early and clearly if the prompt file was mis-edited
+        except prompts.PromptError as exc:
+            logger.error("Prompt file problem: %s", exc)
+            raise DetectorError(f"Prompt file problem: {exc}") from exc
         jpeg = to_jpeg_bytes(image)
         failures = []
         for model in self._models:

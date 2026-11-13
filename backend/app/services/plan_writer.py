@@ -139,6 +139,15 @@ class GeminiPlanWriter:
         self._repo = repo
         self.last_model: str | None = None
 
+    @staticmethod
+    def _prompt(build, *args) -> str:
+        """A broken prompt file is a generation failure (template fallback + reason), not a 500."""
+        try:
+            return build(*args)
+        except prompts.PromptError as exc:
+            logger.error("Prompt file problem: %s", exc)
+            raise PlanGenerationError(f"Prompt file problem: {exc}") from exc
+
     def _ask(self, prompt: str, schema: dict) -> dict:
         failures = []
         for model in self._models:
@@ -163,7 +172,7 @@ class GeminiPlanWriter:
         raise PlanGenerationError("Gemini " + "; ".join(failures) + ". Try again in a moment.")
 
     def write_diet(self, profile: ProfileIn, targets: Targets) -> DietPlanContent:
-        data = self._ask(diet_prompt(profile, targets, self._repo), _schema(DietPlanContent))
+        data = self._ask(self._prompt(diet_prompt, profile, targets, self._repo), _schema(DietPlanContent))
         try:
             return DietPlanContent.model_validate(data)
         except ValidationError as exc:
@@ -171,7 +180,7 @@ class GeminiPlanWriter:
             raise PlanGenerationError("Gemini returned an unusable diet plan. Try again.") from exc
 
     def write_workout(self, profile: ProfileIn) -> WorkoutPlanContent:
-        data = self._ask(workout_prompt(profile), _schema(WorkoutPlanContent))
+        data = self._ask(self._prompt(workout_prompt, profile), _schema(WorkoutPlanContent))
         try:
             return WorkoutPlanContent.model_validate(data)
         except ValidationError as exc:
