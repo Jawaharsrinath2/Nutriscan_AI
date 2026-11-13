@@ -6,6 +6,7 @@ import logging
 import httpx
 from PIL import Image
 
+from app import prompts
 from app.vision.base import Detection, DetectionResult, Detector, DetectorError
 from app.vision.preprocess import to_jpeg_bytes
 
@@ -16,24 +17,10 @@ BOX_SCALE = 1000  # Gemini returns box_2d as [ymin, xmin, ymax, xmax] on a 0-100
 TRANSIENT_HTTP_CODES = {429, 500, 502, 503, 504}
 
 
-def _build_prompt(ingredients: dict[str, dict]) -> str:
+def detection_prompt(ingredients: dict[str, dict]) -> str:
+    """The wording lives in app/prompts/food_detection.txt; the keys the parser relies on are filled from here."""
     catalogue = "\n".join(f"- {key}: {item['name']}" for key, item in ingredients.items())
-    return f"""You are the food detection system of a nutrition app focused on South Indian and Indian meals.
-
-Detect every distinct food item visible in the photo (each idli, dosa, bowl of sambar, chutney, rice
-portion, curry, side dish, drink, etc.). For each item return:
-- label: a short name for what you see, e.g. "Idli", "Coconut chutney", "Sambar".
-- ingredient_key: the closest key from the catalogue below, or "{NO_MATCH_KEY}" if nothing fits.
-- box_2d: [ymin, xmin, ymax, xmax] of the item, normalized to 0-{BOX_SCALE}.
-- grams: your best estimate of the edible weight of that item in grams.
-
-Also return dish_title (a descriptive name for the whole meal) and cuisine (a short tag such as
-"South Indian Tiffin"). If the photo contains no food, set is_food to false and return no items.
-Do not invent items you cannot see.
-
-Ingredient catalogue (key: description, nutrition is per 100 g):
-{catalogue}
-"""
+    return prompts.render("food_detection", catalogue=catalogue, no_match_key=NO_MATCH_KEY, box_scale=BOX_SCALE)
 
 
 def _response_schema(keys: list[str]) -> dict:
@@ -107,14 +94,15 @@ class GeminiDetector(Detector):
         self._types = types
         self._models = list(dict.fromkeys([model, *fallback_models]))  # primary first, no duplicates
         self._timeout_s = timeout_s
-        self._prompt = _build_prompt(ingredients)
+        self._ingredients = ingredients
         self._schema = _response_schema(list(ingredients))
 
     def _ask(self, model: str, jpeg: bytes) -> dict:
         types = self._types
         response = self._client.models.generate_content(
             model=model,
-            contents=[types.Part.from_bytes(data=jpeg, mime_type="image/jpeg"), self._prompt],
+            # Rendered per scan so an edit to the prompt file applies without a restart.
+            contents=[types.Part.from_bytes(data=jpeg, mime_type="image/jpeg"), detection_prompt(self._ingredients)],
             # Temperature left at its default: Google advises against lowering it for Gemini 3 models.
             config=types.GenerateContentConfig(response_mime_type="application/json", response_schema=self._schema),
         )

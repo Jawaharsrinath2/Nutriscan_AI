@@ -64,6 +64,13 @@ person's targets and the dish catalogue is stored instead (`default_plans.py`) a
 Plans are regenerated manually from the Goals tab (6 AI generations per hour per user); a plan is
 flagged stale when weight changes by ≥ 2 kg, the goal changes, or the calorie target moves ≥ 100 kcal.
 
+## Prompts
+
+Everything sent to Gemini is a plain-text template in `backend/app/prompts/` (`food_detection.txt`,
+`diet_plan.txt`, `workout_plan.txt`). Edit them freely; they are read on every request, so a change
+applies to the next scan or plan without a restart. `${placeholders}` are filled by the code and must
+stay; `backend/app/prompts/README.md` lists them, and `pytest` fails if one is missing.
+
 ## Photo detection
 
 The old app guessed dishes from file names and pixel colours, and its pins were hard-coded.
@@ -92,6 +99,7 @@ backend/app/
   main.py, config.py        app setup, settings from .env
   api/routes/               scan, foods, nutrition, meals, water, goals, vision
   schemas/                  request/response models
+  prompts/                  Gemini prompt templates (plain text, editable)
   vision/                   detector interface, Gemini + YOLO detectors, label mapping,
                             portion estimation, dish matching, image preprocessing
   services/                 nutrition calculator, diet evaluator, meal log, goals, scan pipeline

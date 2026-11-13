@@ -11,6 +11,7 @@ from typing import Protocol
 import httpx
 from pydantic import ValidationError
 
+from app import prompts
 from app.config import Settings, get_settings
 from app.schemas.nutrition import Targets
 from app.schemas.plans import DietPlanContent, WorkoutPlanContent
@@ -57,44 +58,28 @@ def _profile_lines(profile: ProfileIn) -> str:
 
 
 def diet_prompt(profile: ProfileIn, targets: Targets, repo: FoodRepository) -> str:
+    """Wording in app/prompts/diet_plan.txt; the targets are the calculator's and must not be changed by the model."""
     foods = ", ".join(item["name"] for item in repo.ingredients.values())
-    return f"""You are a registered dietitian who specialises in South Indian and Indian home cooking.
-Write a one-day diet plan for this person.
-
-{_profile_lines(profile)}
-
-The daily targets are FIXED and were calculated separately. Do not change them; make the meals add up to them:
-calories {targets.kcal} kcal, protein {targets.protein} g, carbs {targets.carbs} g, fat {targets.fat} g.
-
-Rules:
-- Exactly four meals: Breakfast, Lunch, Evening Snack, Dinner, with a usual time for each.
-- Everyday South Indian / Indian food that is easy to cook at home. Prefer these names where they fit:
-  {foods}.
-- Respect the diet preference and the foods to avoid strictly.
-- Give each food a clear portion (pieces, cups or grams) with its calories and protein. Per-meal totals must
-  equal the sum of its items, and the day's total should be within 5% of {targets.kcal} kcal and reach the protein target.
-- Keep the summary to two sentences. Give 3-5 short practical tips and 3-5 simple swaps (e.g. "swap white rice for brown rice").
-"""
+    return prompts.render(
+        "diet_plan",
+        profile=_profile_lines(profile),
+        kcal=targets.kcal,
+        protein=targets.protein,
+        carbs=targets.carbs,
+        fat=targets.fat,
+        foods=foods,
+    )
 
 
 def workout_prompt(profile: ProfileIn) -> str:
+    """Wording in app/prompts/workout_plan.txt."""
     if profile.gym:
         setting = f"a gym, {profile.gym_days} sessions per week, {profile.experience} level"
     elif profile.home_workouts:
         setting = "home with no equipment, 3 short sessions per week"
     else:
         setting = "someone not training yet: 2-3 gentle sessions per week of walking, mobility and bodyweight basics"
-    return f"""You are a certified strength and conditioning coach. Write a weekly workout plan.
-
-{_profile_lines(profile)}
-Setting: {setting}. Goal: {GOAL_WORDS[profile.goal]}.
-
-Rules:
-- Cover all seven days; label rest days with focus "Rest" and no exercises.
-- Each training day: a focus, a realistic duration in minutes, and 4-7 exercises with sets, reps and rest.
-- Match the experience level (beginners: simpler movements, fewer sets). Include a brief warm-up as the first exercise.
-- Keep the summary to two sentences, give 3-5 short tips, and one safety note.
-"""
+    return prompts.render("workout_plan", profile=_profile_lines(profile), setting=setting, goal=GOAL_WORDS[profile.goal])
 
 
 def _schema(model_cls) -> dict:
