@@ -96,6 +96,8 @@ export function AppStateProvider({ children }) {
       }
     };
     const refreshDay = async () => setDay(await fetchToday());
+    // Staleness is judged on the server against the current weight/goal/targets, so re-read plans after those change.
+    const refreshPlans = async () => setPlans(await fetchAiPlans());
 
     const loadDish = (key, { usePresetPhoto = false, toast } = {}) => {
       const dish = catalog?.dishes[key];
@@ -193,6 +195,7 @@ export function AppStateProvider({ children }) {
         setProfile(state);
         setTargets(state.targets);
         showToast(`Profile saved — daily target ${state.targets.kcal.toLocaleString()} kcal`, "🎯");
+        await refreshPlans();
         return state;
       }),
       // No toast: the "Your numbers" step calls this on every slider move.
@@ -214,12 +217,14 @@ export function AppStateProvider({ children }) {
         setProfile(state);
         setTargets(state.targets);
         showToast("Targets recalculated from your profile", "🧮");
+        await refreshPlans();
       }),
       saveCustomTargets: guarded(async (values) => {
         const saved = await saveCustomGoals(values);
         setTargets(saved);
         setProfile((p) => (p ? { ...p, targets: saved, targets_overridden: true } : p));
         showToast("Saved custom daily calorie & macro goals!", "💾");
+        await refreshPlans();
       }),
 
       changeVisionMode: guarded(async (mode) => {

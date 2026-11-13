@@ -34,7 +34,14 @@ export default function App() {
   const [authView, setAuthView] = useState({ open: false, mode: "login" });
   const [visionOpen, setVisionOpen] = useState(false);
   const [editStep, setEditStep] = useState(null); // onboarding step opened from the Goals tab, or null
+  // First-run onboarding stays mounted through the "Writing your plan" / "Plan ready" screens, which come
+  // after the profile is saved (when needsOnboarding has already turned false).
+  const [firstRun, setFirstRun] = useState(false);
   const camera = useCamera();
+
+  useEffect(() => {
+    if (needsOnboarding) setFirstRun(true);
+  }, [needsOnboarding]);
 
   // Signing out lands on the landing page, not on whichever auth form was used to sign in.
   useEffect(() => {
@@ -42,6 +49,7 @@ export default function App() {
       setAuthView({ open: false, mode: "login" });
       setTab("scanner");
       setEditStep(null);
+      setFirstRun(false);
     }
   }, [user]);
 
@@ -68,14 +76,15 @@ export default function App() {
   }
 
   // First sign-in: collect the profile before anything else. Later: the same stepper edits it.
-  if (ready && (needsOnboarding || editStep !== null)) {
-    const editing = editStep !== null;
+  if (ready && (needsOnboarding || firstRun || editStep !== null)) {
+    const editing = !firstRun && !needsOnboarding && editStep !== null;
     return (
       <OnboardingView
         key={editing ? `edit-${editStep}` : "onboard"}
-        initialStep={editStep ?? 0}
+        initialStep={editing ? editStep : 0}
         editing={editing}
         onDone={() => {
+          setFirstRun(false);
           setEditStep(null);
           setTab(editing ? "goals" : "scanner");
         }}
