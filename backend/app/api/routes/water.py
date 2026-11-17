@@ -13,10 +13,21 @@ router = APIRouter(prefix="/api/water", tags=["water"])
 
 
 @router.get("/today", response_model=WaterState)
-def get_water(user: User = Depends(get_current_user), db: Session = Depends(get_db)) -> WaterState:
-    return meal_log_service.get_water(db, user.id, date.today())
+def get_water(
+    day: date | None = None,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> WaterState:
+    query_day = day or date.today()
+    return meal_log_service.get_water(db, user.id, query_day)
 
 
 @router.put("/today", response_model=WaterState)
-def set_water(body: WaterUpdate, user: User = Depends(get_current_user), db: Session = Depends(get_db)) -> WaterState:
-    return meal_log_service.set_water(db, user.id, date.today(), body.glasses)
+def set_water(
+    body: WaterUpdate,
+    day: date | None = None,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> WaterState:
+    query_day = day or date.today()
+    return meal_log_service.set_water(db, user.id, query_day, body.glasses)

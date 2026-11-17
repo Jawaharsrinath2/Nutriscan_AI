@@ -9,7 +9,7 @@ from app.schemas.nutrition import DayTotals
 MealSlot = Literal["Breakfast", "Lunch", "Evening Snack", "Dinner"]
 
 WATER_GOAL_GLASSES = 8
-WATER_MAX_GLASSES = 12
+WATER_MAX_GLASSES = 20
 
 
 class LogMealRequest(BaseModel):

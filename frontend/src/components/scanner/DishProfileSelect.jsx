@@ -19,7 +19,9 @@ export default function DishProfileSelect() {
         <label htmlFor="dishProfileSelect" className="text-xs font-bold text-slate-700">
           Identified Dish Profile (or switch to match your plate):
         </label>
-        <span className="text-[11px] text-emerald-600 font-medium">{plate.source === "scan" ? "Auto-detected" : "Selected"}</span>
+        <span className="text-[11px] text-emerald-600 font-medium">
+          {plate.source === "scan" ? "Auto-detected" : plate.dishKey ? "Selected" : "None"}
+        </span>
       </div>
       <select
         id="dishProfileSelect"
@@ -27,8 +29,8 @@ export default function DishProfileSelect() {
         onChange={(e) => actions.switchDish(e.target.value)}
         className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs sm:text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500"
       >
-        <option value="" disabled>
-          Detected plate — pick a dish to override
+        <option value="">
+          {plate.dishKey ? "Switch dish profile..." : "Select a dish profile (optional)..."}
         </option>
         {groupByMenu(catalog.dishList).map(([group, dishes]) => (
           <optgroup key={group} label={group}>

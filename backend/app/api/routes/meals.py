@@ -14,8 +14,21 @@ router = APIRouter(prefix="/api/meals", tags=["meals"])
 
 
 @router.get("/today", response_model=DayLog)
-def get_today(user: User = Depends(get_current_user), db: Session = Depends(get_db)) -> DayLog:
-    return meal_log_service.day_log(db, user.id, date.today())
+def get_today(
+    day: date | None = None,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> DayLog:
+    query_day = day or date.today()
+    return meal_log_service.day_log(db, user.id, query_day)
+
+
+@router.get("/logged-dates", response_model=list[date])
+def get_logged_dates(
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> list[date]:
+    return meal_log_service.get_logged_dates(db, user.id)
 
 
 @router.post("", response_model=LoggedMeal, status_code=status.HTTP_201_CREATED)
@@ -29,8 +42,13 @@ def log_meal(
 
 
 @router.delete("/today", status_code=status.HTTP_204_NO_CONTENT)
-def clear_today(user: User = Depends(get_current_user), db: Session = Depends(get_db)) -> Response:
-    meal_log_service.clear_day(db, user.id, date.today())
+def clear_today(
+    day: date | None = None,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> Response:
+    query_day = day or date.today()
+    meal_log_service.clear_day(db, user.id, query_day)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 

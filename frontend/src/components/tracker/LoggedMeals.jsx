@@ -1,30 +1,39 @@
 import { useAppState } from "../../context/AppState";
 
 export default function LoggedMeals() {
-  const { day, actions } = useAppState();
+  const { day, selectedDate, todayDate, actions } = useAppState();
+  const isToday = !selectedDate || selectedDate === todayDate;
 
   return (
     <div className="lg:col-span-7 bg-white rounded-2xl border border-slate-200 shadow-sm p-5 space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-4">
         <div>
-          <h2 className="text-lg font-extrabold text-slate-900">Today's Logged Meals</h2>
-          <p className="text-xs text-slate-500">Track every meal you scanned and approved today</p>
+          <h2 className="text-lg font-extrabold text-slate-900">
+            {isToday ? "Today's Logged Meals" : `Logged Meals (${day?.day || selectedDate})`}
+          </h2>
+          <p className="text-xs text-slate-500">
+            {isToday ? "Track every meal you scanned and approved today" : `Past meals recorded on ${day?.day || selectedDate}`}
+          </p>
         </div>
         <button
           type="button"
           onClick={actions.clearLog}
           className="text-xs font-semibold text-rose-600 hover:text-rose-700 px-3 py-1.5 rounded-lg border border-rose-200 hover:bg-rose-50 transition"
         >
-          🗑️ Reset Today's Log
+          🗑️ {isToday ? "Reset Today's Log" : "Clear Log for this Day"}
         </button>
       </div>
 
       <div className="space-y-3">
         {day.meals.length === 0 ? (
           <div className="p-8 text-center rounded-2xl bg-slate-50 border border-dashed border-slate-200">
-            <p className="text-sm font-bold text-slate-700">No meals logged yet today</p>
+            <p className="text-sm font-bold text-slate-700">
+              {isToday ? "No meals logged yet today" : "No meals were recorded on this date"}
+            </p>
             <p className="text-xs text-slate-500 mt-1">
-              Scan a food photo in the Food Scanner tab and click "Eat & Add to Today's Diet Log".
+              {isToday
+                ? 'Scan a food photo in the Food Scanner tab and click "Eat & Add to Today\'s Diet Log".'
+                : "Select another date from the calendar above to view your previous logs."}
             </p>
           </div>
         ) : (

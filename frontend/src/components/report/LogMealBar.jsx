@@ -9,7 +9,7 @@ const SLOTS = [
 ];
 
 export default function LogMealBar() {
-  const { actions } = useAppState();
+  const { plate, actions } = useAppState();
   const [slot, setSlot] = useState("Lunch");
 
   return (
@@ -31,7 +31,8 @@ export default function LogMealBar() {
       <button
         type="button"
         onClick={() => actions.logMeal(slot)}
-        className="flex-1 sm:flex-initial px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm shadow-sm flex items-center justify-center gap-2 transition"
+        disabled={plate.items.length === 0}
+        className="flex-1 sm:flex-initial px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold text-xs sm:text-sm shadow-sm flex items-center justify-center gap-2 transition"
       >
         <span>✅ Eat & Add to Today's Diet Log</span>
       </button>

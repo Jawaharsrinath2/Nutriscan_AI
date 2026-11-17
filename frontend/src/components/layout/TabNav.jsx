@@ -15,7 +15,7 @@ export default function TabNav({ mealCount }) {
         📸 Food Scanner
       </NavLink>
       <NavLink to={PATHS.dashboard} className={tabClass}>
-        📊 Daily Diet Log{" "}
+        📊 Dashboard{" "}
         <span className="ml-1 px-1.5 py-0.2 bg-emerald-100 text-emerald-800 rounded-full text-xs">{mealCount}</span>
       </NavLink>
       <NavLink to={PATHS.dietPlan} className={tabClass}>

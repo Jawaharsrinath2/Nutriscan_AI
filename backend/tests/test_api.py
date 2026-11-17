@@ -76,6 +76,30 @@ def test_logging_meals_updates_consumed_totals(user_client):
     assert user_client.get("/api/meals/today").json()["meals"] == []
 
 
+def test_dashboard_endpoint(user_client):
+    meal = {"slot": "Lunch", "title": "Rice", "image_url": "/samples/steamed_white_rice.jpg",
+            "items": [{"key": "white_rice", "grams": 200}]}
+    user_client.post("/api/meals", json=meal)
+    user_client.put("/api/water/today", json={"glasses": 4})
+
+    dash = user_client.get("/api/dashboard").json()
+    assert dash["summary"]["kcal_logged"] == 260
+    assert dash["summary"]["kcal_target"] == 2000
+    assert dash["summary"]["protein_logged"] == 5
+    assert dash["summary"]["carbs_logged"] == 56
+    assert dash["summary"]["fat_logged"] == 1
+    assert len(dash["meals"]) == 1
+    assert dash["water"]["glasses"] == 4
+    # Plans stay in /api/plans, not in dashboard
+    assert "plans" not in dash and "diet_plan" not in dash
+
+    # Querying a specific date or logged dates
+    dates = user_client.get("/api/meals/logged-dates").json()
+    assert len(dates) >= 1
+    past = user_client.get("/api/meals/today?day=2020-01-01").json()
+    assert past["meals"] == []
+
+
 def test_meal_image_url_must_be_local(user_client):
     meal = {"slot": "Lunch", "title": "x", "image_url": "javascript:alert(1)", "items": [{"key": "white_rice", "grams": 10}]}
     assert user_client.post("/api/meals", json=meal).status_code == 422
@@ -85,7 +109,7 @@ def test_water(user_client):
     assert user_client.get("/api/water/today").json()["glasses"] == 0
     assert user_client.put("/api/water/today", json={"glasses": 5}).json()["glasses"] == 5
     assert user_client.get("/api/water/today").json()["glasses"] == 5
-    assert user_client.put("/api/water/today", json={"glasses": 13}).status_code == 422
+    assert user_client.put("/api/water/today", json={"glasses": 21}).status_code == 422
 
 
 def test_goals(user_client):
@@ -154,6 +178,7 @@ def test_scan_rejects_non_image(user_client):
 
 
 def test_per_user_routes_require_login(client):
+    assert client.get("/api/dashboard").status_code == 401
     assert client.get("/api/meals/today").status_code == 401
     assert client.get("/api/water/today").status_code == 401
     assert client.get("/api/goals").status_code == 401

@@ -20,7 +20,7 @@ export default function NutritionReport() {
               {fmt(evaluation?.totals.total_grams)}g Total Portion
             </span>
           </div>
-          <h2 className="text-xl font-extrabold text-slate-900 mt-0.5">{plate.title}</h2>
+          <h2 className="text-xl font-extrabold text-slate-900 mt-0.5">{plate.title || "No Meal Selected"}</h2>
         </div>
         <div className="flex items-center gap-2">
           <button

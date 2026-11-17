@@ -1,7 +1,8 @@
-from app.api.routes import auth, foods, goals, meals, nutrition, plans, profile, scan, vision, water
+from app.api.routes import auth, dashboard, foods, goals, meals, nutrition, plans, profile, scan, vision, water
 
 ALL_ROUTERS = [
     auth.router,
+    dashboard.router,
     profile.router,
     plans.router,
     scan.router,

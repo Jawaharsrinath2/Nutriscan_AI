@@ -6,9 +6,9 @@ from datetime import date, datetime
 from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
-from app.db.models import MealLog, WaterLog
+from app.db.models import MealLog, UserProfile, WaterLog
 from app.schemas.food import PlateItem
-from app.schemas.meal import DayLog, LoggedMeal, LogMealRequest, WaterState
+from app.schemas.meal import WATER_GOAL_GLASSES, DayLog, LoggedMeal, LogMealRequest, WaterState
 from app.schemas.nutrition import DayTotals
 from app.services.food_repository import FoodRepository
 from app.services.nutrition_calculator import day_totals, meal_totals
@@ -84,9 +84,25 @@ def clear_day(db: Session, user_id: int, day: date) -> None:
     db.commit()
 
 
+def get_logged_dates(db: Session, user_id: int) -> list[date]:
+    rows = db.scalars(
+        select(MealLog.day).where(MealLog.user_id == user_id).distinct().order_by(MealLog.day.desc())
+    ).all()
+    return list(rows)
+
+
+def calculate_water_goal(weight_kg: float | None) -> int:
+    if not weight_kg or weight_kg <= 0:
+        return WATER_GOAL_GLASSES
+    # Standard hydration formula: 35 ml per kg of body weight; 1 standard glass = 250 ml
+    return max(6, min(20, round((weight_kg * 35) / 250)))
+
+
 def get_water(db: Session, user_id: int, day: date) -> WaterState:
     row = db.get(WaterLog, (user_id, day))
-    return WaterState(day=day, glasses=row.glasses if row else 0)
+    profile = db.get(UserProfile, user_id)
+    goal = calculate_water_goal(profile.weight_kg if profile else None)
+    return WaterState(day=day, glasses=row.glasses if row else 0, goal=goal)
 
 
 def set_water(db: Session, user_id: int, day: date, glasses: int) -> WaterState:
@@ -96,4 +112,6 @@ def set_water(db: Session, user_id: int, day: date, glasses: int) -> WaterState:
     else:
         row.glasses = glasses
     db.commit()
-    return WaterState(day=day, glasses=glasses)
+    profile = db.get(UserProfile, user_id)
+    goal = calculate_water_goal(profile.weight_kg if profile else None)
+    return WaterState(day=day, glasses=glasses, goal=goal)

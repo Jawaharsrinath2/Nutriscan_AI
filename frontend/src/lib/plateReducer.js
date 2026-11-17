@@ -25,11 +25,11 @@ const SCAN_PROBLEM = {
 };
 
 export const initialPlate = {
-  source: "preset", // "preset" | "manual" | "scan"
+  source: "none", // "none" | "preset" | "manual" | "scan"
   dishKey: null,
   title: "",
   cuisine: "",
-  badge: "",
+  badge: "Ready to Scan",
   scanNote: null, // why the last scan gave no plate; shown under the photo until a dish or new scan replaces it
   imageUrl: null,
   customPhoto: false, // true when the photo came from a scan rather than a preset
@@ -132,6 +132,19 @@ export function plateReducer(state, action) {
 
     case "RESET_PLATE":
       return { ...state, items: toRows(state.baseItems), portionScale: 1 };
+
+    case "CLEAR_PHOTO":
+      return {
+        ...state,
+        imageUrl: null,
+        customPhoto: false,
+        pins: [],
+      };
+
+    case "CLEAR_PLATE":
+      return {
+        ...initialPlate,
+      };
 
     case "SET_CONFIRMED_ITEMS": {
       const items = action.items.map((item) => {

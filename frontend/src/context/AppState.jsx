@@ -16,7 +16,15 @@ import { useAuth } from "./AuthContext";
 const AppStateContext = createContext(null);
 
 const DEFAULT_DISH = "steamed_white_rice";
-const WATER_MAX_GLASSES = 12;
+export const WATER_MAX_GLASSES = 20;
+
+export const getTodayDateString = () => {
+  const d = new Date();
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
 
 const byKey = (list) => Object.fromEntries(list.map((item) => [item.key, item]));
 
@@ -28,6 +36,7 @@ export function AppStateProvider({ children }) {
   const [profile, setProfile] = useState(null); // ProfileResponse; profile.profile is null until onboarded
   const [plans, setPlans] = useState(null); // PlansResponse
   const [generating, setGenerating] = useState(null); // "diet" | "workout" | "both" | null
+  const [selectedDate, setSelectedDateState] = useState(getTodayDateString());
   const [day, setDay] = useState(null);
   const [water, setWaterState] = useState(null);
   const [vision, setVision] = useState(null);
@@ -36,11 +45,13 @@ export function AppStateProvider({ children }) {
   const [confirmWeightsOpen, setConfirmWeightsOpen] = useState(false);
   const [plate, dispatch] = useReducer(plateReducer, initialPlate);
 
-  // Actions read the latest plate/water through refs so they don't need to be rebuilt on every change.
+  // Actions read the latest plate/water/date through refs so they don't need to be rebuilt on every change.
   const plateRef = useRef(plate);
   plateRef.current = plate;
   const waterRef = useRef(water);
   waterRef.current = water;
+  const selectedDateRef = useRef(selectedDate);
+  selectedDateRef.current = selectedDate;
 
   // The food catalogue and detector status are public: load them once.
   useEffect(() => {
@@ -49,7 +60,6 @@ export function AppStateProvider({ children }) {
         const dishes = byKey(dishList);
         setCatalog({ ingredientList, ingredients: byKey(ingredientList), dishList, dishes, plans });
         setVision(visionStatus);
-        dispatch({ type: "LOAD_DISH", dish: dishes[DEFAULT_DISH] ?? dishList[0], usePresetPhoto: true });
       })
       .catch(setLoadError);
   }, []);
@@ -63,7 +73,7 @@ export function AppStateProvider({ children }) {
       setDay(null);
       setWaterState(null);
       // The plate is client-side state; the next person to sign in must not inherit it.
-      if (catalog) dispatch({ type: "LOAD_DISH", dish: catalog.dishes[DEFAULT_DISH] ?? catalog.dishList[0], usePresetPhoto: true });
+      dispatch({ type: "CLEAR_PLATE" });
       return;
     }
     let cancelled = false;
@@ -95,7 +105,8 @@ export function AppStateProvider({ children }) {
         return undefined;
       }
     };
-    const refreshDay = async () => setDay(await fetchToday());
+    const refreshDay = async (d = selectedDateRef.current) => setDay(await fetchToday(d));
+    const refreshWater = async (d = selectedDateRef.current) => setWaterState(await fetchWater(d));
     // Staleness is judged on the server against the current weight/goal/targets, so re-read plans after those change.
     // Non-fatal: the save itself succeeded, and a reload shows the right stale flags anyway.
     const refreshPlans = () => fetchAiPlans().then(setPlans).catch(() => {});
@@ -156,6 +167,14 @@ export function AppStateProvider({ children }) {
         dispatch({ type: "RESET_PLATE" });
         showToast("Plate ingredients reset to default weights", "↺");
       },
+      clearPhoto: () => {
+        dispatch({ type: "CLEAR_PHOTO" });
+        showToast("Photo removed", "🗑️");
+      },
+      clearPlate: () => {
+        dispatch({ type: "CLEAR_PLATE" });
+        showToast("Plate cleared", "↺");
+      },
       autoFit: guarded(async () => {
         const result = await autoFitPlate(plateRef.current.items);
         dispatch({ type: "APPLY_AUTO_FIT", items: result.items });
@@ -176,19 +195,39 @@ export function AppStateProvider({ children }) {
       deleteMeal: guarded(async (id) => {
         await deleteMeal(id);
         await refreshDay();
-        showToast("Meal removed from today's log", "🗑️");
+        showToast("Meal removed from log", "🗑️");
       }),
       clearLog: guarded(async () => {
-        await clearToday();
+        await clearToday(selectedDateRef.current);
         await refreshDay();
-        showToast("Reset today's meal log", "🗑️");
+        showToast(`Reset meal log for ${selectedDateRef.current}`, "🗑️");
+      }),
+
+      setSelectedDate: guarded(async (dateStr) => {
+        setSelectedDateState(dateStr);
+        selectedDateRef.current = dateStr;
+        const [dayData, waterData] = await Promise.all([fetchToday(dateStr), fetchWater(dateStr)]);
+        setDay(dayData);
+        setWaterState(waterData);
       }),
 
       changeWater: guarded(async (delta) => {
-        const glasses = Math.max(0, Math.min(WATER_MAX_GLASSES, waterRef.current.glasses + delta));
-        if (glasses === waterRef.current.glasses) return;
-        setWaterState(await setWater(glasses));
-        if (delta > 0) showToast("Logged +250ml water!", "💧");
+        const current = waterRef.current?.glasses || 0;
+        const glasses = Math.max(0, Math.min(WATER_MAX_GLASSES, current + delta));
+        if (glasses === current) return;
+        setWaterState(await setWater(glasses, selectedDateRef.current));
+        if (delta > 0) showToast(`Logged +${Math.min(delta, WATER_MAX_GLASSES - current) * 250}ml water!`, "💧");
+      }),
+      setWaterGlasses: guarded(async (count) => {
+        const current = waterRef.current?.glasses || 0;
+        const glasses = Math.max(0, Math.min(WATER_MAX_GLASSES, count));
+        if (glasses === current) return;
+        setWaterState(await setWater(glasses, selectedDateRef.current));
+        showToast(`Water updated to ${glasses} glasses (${((glasses * 250) / 1000).toFixed(1)}L)!`, "💧");
+      }),
+      resetWater: guarded(async () => {
+        setWaterState(await setWater(0, selectedDateRef.current));
+        showToast(`Water tracker reset for ${selectedDateRef.current}`, "💧");
       }),
 
       saveProfile: guarded(async (data) => {
@@ -247,7 +286,24 @@ export function AppStateProvider({ children }) {
   }, [catalog, showToast]);
 
   const value = {
-    ready, needsOnboarding, loadError, catalog, targets, profile, plans, generating, day, water, vision, plate, evaluation, scanning, confirmWeightsOpen, actions,
+    ready,
+    needsOnboarding,
+    loadError,
+    catalog,
+    targets,
+    profile,
+    plans,
+    generating,
+    day,
+    water,
+    vision,
+    plate,
+    evaluation,
+    scanning,
+    confirmWeightsOpen,
+    selectedDate,
+    todayDate: getTodayDateString(),
+    actions,
   };
   return <AppStateContext.Provider value={value}>{children}</AppStateContext.Provider>;
 }

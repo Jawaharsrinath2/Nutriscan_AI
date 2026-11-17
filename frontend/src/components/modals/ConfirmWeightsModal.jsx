@@ -384,31 +384,36 @@ export default function ConfirmWeightsModal({ open, onClose }) {
         </div>
 
         {/* ── Modal Footer ────────────────────────────────────────────── */}
-        <div className="p-5 border-t border-slate-200 bg-slate-50 flex flex-col sm:flex-row items-center justify-between gap-4">
-          {/* Running Totals */}
-          <div className="flex items-center gap-4 text-xs">
-            <div>
+        <div className="p-4 sm:p-5 border-t border-slate-200 bg-slate-50 space-y-3.5">
+          {/* Row 1: Running Totals in a single clean row */}
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 py-2.5 px-4 rounded-xl bg-white border border-slate-200/80 text-xs shadow-sm">
+            <div className="flex items-center gap-1.5 whitespace-nowrap">
               <span className="text-slate-400 font-medium">Total Portion:</span>
-              <span className="ml-1 font-extrabold text-slate-900">{totals.grams}g</span>
+              <span className="font-extrabold text-slate-900">{totals.grams}g</span>
             </div>
             <span className="text-slate-300">|</span>
-            <div>
+            <div className="flex items-center gap-1.5 whitespace-nowrap">
               <span className="text-slate-400 font-medium">Est. Calories:</span>
-              <span className="ml-1 font-extrabold text-emerald-700">{totals.kcal} kcal</span>
+              <span className="font-extrabold text-emerald-700">{totals.kcal} kcal</span>
             </div>
             <span className="text-slate-300">|</span>
-            <div>
+            <div className="flex items-center gap-1.5 whitespace-nowrap">
               <span className="text-slate-400 font-medium">Protein:</span>
-              <span className="ml-1 font-extrabold text-indigo-600">{totals.protein}g</span>
+              <span className="font-extrabold text-indigo-600">{totals.protein}g</span>
+            </div>
+            <span className="text-slate-300">|</span>
+            <div className="flex items-center gap-1.5 whitespace-nowrap">
+              <span className="text-slate-400 font-medium">Carbs:</span>
+              <span className="font-extrabold text-amber-700">{totals.carbs}g</span>
             </div>
           </div>
 
-          {/* Buttons */}
-          <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+          {/* Row 2: Action Buttons placed on second line */}
+          <div className="flex items-center justify-center gap-3 pt-0.5">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-slate-600 font-semibold text-xs transition"
+              className="px-5 py-2.5 rounded-xl border border-slate-300 hover:bg-slate-200/70 text-slate-700 font-bold text-xs transition"
             >
               Cancel
             </button>
@@ -416,9 +421,9 @@ export default function ConfirmWeightsModal({ open, onClose }) {
               type="button"
               onClick={handleSave}
               disabled={draftItems.length === 0}
-              className="flex-1 sm:flex-none px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold text-xs shadow-md shadow-emerald-500/25 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold text-xs shadow-md shadow-emerald-500/25 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              <span>Calculate Nutrition &amp; View Macros</span>
+              <span>Calculate Nutrients &amp; Macros</span>
               <span>→</span>
             </button>
           </div>

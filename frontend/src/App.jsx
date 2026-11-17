@@ -120,7 +120,7 @@ export default function App() {
 
       <Route element={<RequireUser><AppLayout /></RequireUser>}>
         <Route path={PATHS.scan} element={<Titled title="Food Scanner"><ScannerView /></Titled>} />
-        <Route path={PATHS.dashboard} element={<Titled title="Daily Diet Log"><TrackerView /></Titled>} />
+        <Route path={PATHS.dashboard} element={<Titled title="Dashboard"><TrackerView /></Titled>} />
         <Route path={PATHS.dietPlan} element={<Titled title="Diet Plan & Goals"><GoalsView /></Titled>} />
       </Route>
 
