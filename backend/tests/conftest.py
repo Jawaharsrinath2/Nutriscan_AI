@@ -5,10 +5,12 @@ from pathlib import Path
 # Point storage at a throwaway folder and disable real detectors *before* the app reads settings.
 _TMP = Path(tempfile.mkdtemp(prefix="nutriscan-test-"))
 os.environ.update(
+    DATABASE_URL=f"sqlite:///{_TMP / 'test.db'}",
     DB_PATH=str(_TMP / "test.db"),
     UPLOADS_DIR=str(_TMP / "uploads"),
     DETECTOR="none",
     GEMINI_API_KEY="",
+    SMTP_HOST="",
 )
 
 import pytest  # noqa: E402

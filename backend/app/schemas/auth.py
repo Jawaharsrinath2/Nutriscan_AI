@@ -26,6 +26,25 @@ class UserInfo(BaseModel):
     username: str
     provider: str
     avatar_url: str | None = None
+    role: str = "user"
+    theme: str = "emerald"
+
+
+class UpdateProfileRequest(BaseModel):
+    username: str | None = Field(default=None, min_length=2, max_length=100)
+    avatar_url: str | None = Field(default=None, max_length=500)
+    theme: str | None = Field(default=None, max_length=30)
+
+
+class AvatarUploadResponse(BaseModel):
+    avatar_url: str
+    user: UserInfo
+
+
+class ChangePasswordRequest(BaseModel):
+    current_password: str
+    new_password: str = Field(..., min_length=8, max_length=128)
+
 
 
 class TokenResponse(BaseModel):

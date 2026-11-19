@@ -9,6 +9,8 @@ export const PATHS = {
   scan: "/scan",
   dashboard: "/dashboard",
   dietPlan: "/dietplan",
+  profile: "/profile",
+  admin: "/admin",
 };
 
 /** Where a signed-in person lands after login, signup or onboarding. */

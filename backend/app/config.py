@@ -28,6 +28,7 @@ class Settings(BaseSettings):
     yolo_weights: Path = Path("models/food_yolo.pt")
     yolo_min_score: float = 0.35
 
+    database_url: str | None = None
     db_path: Path = Path("storage/nutriscan.db")
     uploads_dir: Path = Path("storage/uploads")
     max_upload_mb: int = 10

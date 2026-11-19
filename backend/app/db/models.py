@@ -1,6 +1,6 @@
 from datetime import date, datetime
 
-from sqlalchemy import JSON, Boolean, Date, DateTime, Float, Integer, String
+from sqlalchemy import JSON, Boolean, Date, DateTime, Float, Integer, String, Text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -16,8 +16,10 @@ class User(Base):
     username: Mapped[str] = mapped_column(String(100), unique=True, index=True, nullable=False)
     hashed_password: Mapped[str | None] = mapped_column(String(256), nullable=True)  # null for OAuth-only users
     provider: Mapped[str] = mapped_column(String(20), default="local")  # "local" or "google"
+    role: Mapped[str] = mapped_column(String(20), default="user", index=True)  # "user" or "admin"
     avatar_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
-    is_active: Mapped[bool] = mapped_column(Integer, default=True)
+    theme: Mapped[str] = mapped_column(String(30), default="emerald")
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     failed_attempts: Mapped[int] = mapped_column(Integer, default=0)
     locked_until: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
@@ -112,3 +114,16 @@ class PasswordResetCode(Base):
     is_used: Mapped[bool] = mapped_column(Integer, default=False)
     attempts: Mapped[int] = mapped_column(Integer, default=0)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+
+class EmailTemplate(Base):
+    __tablename__ = "email_templates"
+
+    key: Mapped[str] = mapped_column(String(64), primary_key=True)
+    name: Mapped[str] = mapped_column(String(120))
+    subject: Mapped[str] = mapped_column(String(255))
+    html_content: Mapped[str] = mapped_column(Text)
+    text_content: Mapped[str] = mapped_column(Text)
+    description: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    variables: Mapped[list] = mapped_column(JSON, default=list)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

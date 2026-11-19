@@ -349,3 +349,51 @@ def test_google_payload_rejected(client_id, changes, code):
     with pytest.raises(HTTPException) as err:
         auth_service.check_google_payload({**GOOD_GOOGLE, **changes}, client_id)
     assert err.value.status_code == code
+
+
+def test_update_profile_and_theme(user_client):
+    # Update username, avatar_url, and theme
+    res = user_client.put(
+        "/api/auth/profile",
+        json={"username": "alice_updated", "avatar_url": "https://example.com/avatar.jpg", "theme": "ocean"},
+    )
+    assert res.status_code == 200
+    data = res.json()
+    assert data["username"] == "alice_updated"
+    assert data["avatar_url"] == "https://example.com/avatar.jpg"
+    assert data["theme"] == "ocean"
+
+    # Verify /me returns the new data
+    me_res = user_client.get("/api/auth/me")
+    assert me_res.status_code == 200
+    assert me_res.json()["username"] == "alice_updated"
+    assert me_res.json()["theme"] == "ocean"
+
+
+def test_upload_avatar_and_change_password(user_client, client):
+    from io import BytesIO
+
+    # Upload avatar image
+    img_data = BytesIO(b"fake-image-bytes-header")
+    res = user_client.post(
+        "/api/auth/profile/avatar",
+        files={"file": ("my_avatar.png", img_data, "image/png")},
+    )
+    assert res.status_code == 200
+    assert res.json()["avatar_url"].startswith("/uploads/avatar_")
+
+    # Change password
+    pwd_res = user_client.put(
+        "/api/auth/change-password",
+        json={"current_password": "password123", "new_password": "new_secure_password"},
+    )
+    assert pwd_res.status_code == 200
+
+    # Old password fails
+    bad_login = client.post("/api/auth/login", json={"email": "tester@example.com", "password": "password123"})
+    assert bad_login.status_code == 401
+
+    # New password succeeds
+    good_login = client.post("/api/auth/login", json={"email": "tester@example.com", "password": "new_secure_password"})
+    assert good_login.status_code == 200
+

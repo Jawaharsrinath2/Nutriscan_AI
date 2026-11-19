@@ -35,3 +35,21 @@ export function resetPassword(email, code, newPassword) {
 export function fetchDevCode(email) {
   return request(`/api/auth/dev/latest-code?email=${encodeURIComponent(email)}`);
 }
+
+export function updateProfile(data) {
+  return request("/api/auth/profile", { method: "PUT", body: data });
+}
+
+export function uploadAvatar(file) {
+  const form = new FormData();
+  form.append("file", file);
+  return request("/api/auth/profile/avatar", { method: "POST", form });
+}
+
+export function changePassword(currentPassword, newPassword) {
+  return request("/api/auth/change-password", {
+    method: "PUT",
+    body: { current_password: currentPassword, new_password: newPassword },
+  });
+}
+

@@ -15,6 +15,13 @@ _PER_USER_TABLES = ("meal_logs", "water_logs", "daily_goals")
 @lru_cache
 def get_engine() -> Engine:
     settings = get_settings()
+    if settings.database_url:
+        url = settings.database_url
+        if url.startswith("postgres://"):
+            url = url.replace("postgres://", "postgresql://", 1)
+        if url.startswith("sqlite"):
+            return create_engine(url, connect_args={"check_same_thread": False})
+        return create_engine(url, pool_pre_ping=True)
     db_file = settings.resolve(settings.db_path)
     db_file.parent.mkdir(parents=True, exist_ok=True)
     return create_engine(f"sqlite:///{db_file}", connect_args={"check_same_thread": False})
@@ -38,6 +45,9 @@ def init_db() -> None:
     engine = get_engine()
     _drop_pre_account_tables(engine)
     Base.metadata.create_all(engine)
+    from app.db.admin_setup import ensure_admin_and_templates
+
+    ensure_admin_and_templates(engine)
 
 
 def get_db() -> Iterator[Session]:

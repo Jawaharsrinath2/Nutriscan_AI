@@ -7,7 +7,7 @@ import TabNav from "./TabNav";
 const MODE_SHORT_LABEL = { gemini: "Gemini Vision", yolo: "YOLO Vision", none: "Manual Mode" };
 
 export default function Header({ onOpenVision }) {
-  const { user, logout } = useAuth();
+  const { user, isAdmin, logout } = useAuth();
   const { day, vision } = useAppState();
 
   return (
@@ -33,7 +33,7 @@ export default function Header({ onOpenVision }) {
           </div>
         </Link>
 
-        {/* Right side: Tabs + Vision Button + Profile at right corner */}
+        {/* Right side: Tabs + Vision Button + Admin Button + Profile */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <TabNav mealCount={day?.meals.length ?? 0} />
 
@@ -47,20 +47,42 @@ export default function Header({ onOpenVision }) {
             <span className="hidden sm:inline">{vision ? MODE_SHORT_LABEL[vision.active] : "Smart Vision"}</span>
           </button>
 
-          {/* User profile at the right corner side (next to Diet Plan & Goals) */}
+          {isAdmin && (
+            <Link
+              to={PATHS.admin}
+              className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white text-xs font-bold flex items-center gap-1.5 transition shadow-sm shadow-amber-500/20"
+              title="Open Admin Control Panel"
+            >
+              <span>👑</span>
+              <span className="hidden sm:inline">Admin</span>
+            </Link>
+          )}
+
+          {/* User profile avatar at the right corner side (Click to open Profile & Settings) */}
           <div className="flex items-center gap-2 pl-2 border-l border-slate-200">
-            {user?.avatar_url ? (
-              <img src={user.avatar_url} alt="" className="w-8 h-8 rounded-full ring-2 ring-emerald-200" referrerPolicy="no-referrer" />
-            ) : (
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white text-xs font-bold">
-                {(user?.username?.[0] || "U").toUpperCase()}
-              </div>
-            )}
-            <span className="text-sm font-medium text-slate-700 hidden lg:inline max-w-[120px] truncate">{user?.username}</span>
+            <Link
+              to={PATHS.profile}
+              className="group relative flex items-center justify-center rounded-full transition-transform hover:scale-105 focus:outline-none"
+              title={`View Profile & Settings (${user?.username || "Account"})`}
+            >
+              {user?.avatar_url ? (
+                <img
+                  src={user.avatar_url}
+                  alt={user.username || "Profile"}
+                  className="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-cover ring-2 ring-emerald-500/30 group-hover:ring-emerald-500 transition shadow-sm"
+                  referrerPolicy="no-referrer"
+                />
+              ) : (
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white text-xs sm:text-sm font-extrabold shadow-sm ring-2 ring-emerald-500/20 group-hover:ring-emerald-500 transition uppercase">
+                  {(user?.username?.[0] || "U").toUpperCase()}
+                </div>
+              )}
+            </Link>
+
             <button
               type="button"
               onClick={logout}
-              className="px-2.5 py-1.5 rounded-lg border border-slate-200 hover:border-red-300 bg-white hover:bg-red-50 text-slate-500 hover:text-red-600 text-xs font-medium transition"
+              className="p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg border border-slate-200 hover:border-red-300 bg-white hover:bg-red-50 text-slate-400 hover:text-red-600 text-xs font-medium transition"
               title="Sign out"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
