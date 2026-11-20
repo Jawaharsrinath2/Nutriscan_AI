@@ -113,8 +113,58 @@ export default function TrackerView() {
   };
 
   return (
-    <section className="space-y-5">
-      {/* Date Navigation & Calendar Selector */}
+    <section className="space-y-4">
+      {/* 1. Sleek, Compact Welcome Header (Top of Dashboard) */}
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 text-white px-4 sm:px-5 py-3 border border-slate-700/60 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="relative shrink-0">
+            <div className="w-10 h-10 rounded-xl ring-2 ring-emerald-500/40 p-0.5 bg-gradient-to-br from-emerald-400 to-teal-500 shadow-sm overflow-hidden flex items-center justify-center">
+              {user?.avatar_url ? (
+                <img src={user.avatar_url} alt="" className="w-full h-full object-cover rounded-[9px]" />
+              ) : (
+                <div className="w-full h-full bg-slate-900 rounded-[9px] text-white flex items-center justify-center text-sm font-black uppercase">
+                  {greetingName[0]}
+                </div>
+              )}
+            </div>
+            <span
+              className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-slate-900"
+              title="Active"
+            />
+          </div>
+
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              <h1 className="text-sm sm:text-base font-black text-white tracking-tight truncate">
+                {isToday ? timeGreeting.salutation : `Welcome Back, ${greetingName}!`}
+              </h1>
+              <span className="hidden sm:inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shrink-0">
+                {isToday ? timeGreeting.badge : formatDisplayDate(selectedDate, todayDate)}
+              </span>
+            </div>
+            <p className="text-xs text-slate-400 truncate max-w-xl">
+              {isToday
+                ? timeGreeting.subtitle
+                : `Reviewing intake and targets for ${formatDisplayDate(selectedDate, todayDate)}.`}
+            </p>
+          </div>
+        </div>
+
+        {/* Right side: Goal + Remaining Pill */}
+        <div className="flex items-center gap-2 shrink-0 self-end md:self-auto text-xs">
+          {profile?.profile?.goal && (
+            <span className="hidden lg:inline-flex px-2.5 py-1 rounded-xl text-[11px] font-bold text-slate-300 bg-slate-800/80 border border-slate-700">
+              🎯 {GOAL_LABELS[profile.profile.goal] || profile.profile.goal}
+            </span>
+          )}
+          <div className="px-3 py-1 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-bold flex items-center gap-1.5 shadow-2xs">
+            <span>🔥</span>
+            <span>{fmt(remainingKcal)} kcal left</span>
+          </div>
+        </div>
+      </div>
+
+      {/* 2. Date Navigation & Actions Bar */}
       <div className="bg-white border border-slate-200 rounded-2xl p-3 sm:p-4 shadow-sm flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <button
@@ -195,56 +245,6 @@ export default function TrackerView() {
             <span>📸</span>
             <span>Share Daily Card</span>
           </button>
-        </div>
-      </div>
-
-      {/* Sleek, Compact Welcome Header */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 text-white px-4 sm:px-5 py-3 border border-slate-700/60 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3">
-        <div className="flex items-center gap-3 min-w-0">
-          <div className="relative shrink-0">
-            <div className="w-10 h-10 rounded-xl ring-2 ring-emerald-500/40 p-0.5 bg-gradient-to-br from-emerald-400 to-teal-500 shadow-sm overflow-hidden flex items-center justify-center">
-              {user?.avatar_url ? (
-                <img src={user.avatar_url} alt="" className="w-full h-full object-cover rounded-[9px]" />
-              ) : (
-                <div className="w-full h-full bg-slate-900 rounded-[9px] text-white flex items-center justify-center text-sm font-black uppercase">
-                  {greetingName[0]}
-                </div>
-              )}
-            </div>
-            <span
-              className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-slate-900"
-              title="Active"
-            />
-          </div>
-
-          <div className="min-w-0">
-            <div className="flex items-center gap-2">
-              <h1 className="text-sm sm:text-base font-black text-white tracking-tight truncate">
-                {isToday ? timeGreeting.salutation : `Welcome Back, ${greetingName}!`}
-              </h1>
-              <span className="hidden sm:inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shrink-0">
-                {isToday ? timeGreeting.badge : formatDisplayDate(selectedDate, todayDate)}
-              </span>
-            </div>
-            <p className="text-xs text-slate-400 truncate max-w-xl">
-              {isToday
-                ? timeGreeting.subtitle
-                : `Reviewing intake and targets for ${formatDisplayDate(selectedDate, todayDate)}.`}
-            </p>
-          </div>
-        </div>
-
-        {/* Right side: Goal + Remaining Pill */}
-        <div className="flex items-center gap-2 shrink-0 self-end md:self-auto text-xs">
-          {profile?.profile?.goal && (
-            <span className="hidden lg:inline-flex px-2.5 py-1 rounded-xl text-[11px] font-bold text-slate-300 bg-slate-800/80 border border-slate-700">
-              🎯 {GOAL_LABELS[profile.profile.goal] || profile.profile.goal}
-            </span>
-          )}
-          <div className="px-3 py-1 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-bold flex items-center gap-1.5 shadow-2xs">
-            <span>🔥</span>
-            <span>{fmt(remainingKcal)} kcal left</span>
-          </div>
         </div>
       </div>
 
