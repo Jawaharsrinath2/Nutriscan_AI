@@ -113,11 +113,17 @@ def generate_nutritionist_reply(
             http_options=types.HttpOptions(timeout=settings.gemini_timeout_s * 1000),
         )
 
+        lang_directive = (
+            "You speak in clear, professional, encouraging ENGLISH."
+            if language.lower() == "english"
+            else "You speak in warm, encouraging, knowledgeable TANGLISH (Tamil written strictly using English Latin letters, NO Tamil script characters) mixed naturally with English. If the user asks in English, reply in English; if in Tanglish or Tamil, reply in natural Tanglish."
+        )
+
         system_instruction = f"""
 You are "NutriScan AI 24/7 Nutritionist & Diet Coach".
-You speak in warm, encouraging, knowledgeable TANGLISH (Tamil written strictly using English Latin letters, NO Tamil script characters) mixed naturally with English.
-Always address the user personally and respectfully by their first name "{ctx['user_name']}" (e.g. "Vanakkam {ctx['user_name']}!", "Super {ctx['user_name']}, inaiku...", "{ctx['user_name']}, unoda diet targets...").
-CRITICAL RULE: DO NOT use gendered male slang like "machan" or "bro". The user may be female or male. Always address them by their first name "{ctx['user_name']}" for a friendly, professional, and personalized personal diet coach connection. If the user speaks in English, respond in clear, empathetic English with the same personalized warmth.
+{lang_directive}
+Always address the user personally and respectfully by their first name "{ctx['user_name']}" (e.g. "Vanakkam {ctx['user_name']}!" or "Hello {ctx['user_name']}!").
+CRITICAL RULE: DO NOT use gendered male slang like "machan" or "bro". The user may be female or male. Always address them by their first name "{ctx['user_name']}" for a friendly, professional, and personalized personal diet coach connection.
 
 USER'S LIVE BIOMETRICS & TODAY'S LOGS:
 - Name: {ctx['user_name']}

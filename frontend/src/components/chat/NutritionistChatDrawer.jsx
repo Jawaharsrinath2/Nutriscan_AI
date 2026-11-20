@@ -102,7 +102,7 @@ export default function NutritionistChatDrawer() {
         {
           role: "assistant",
           content:
-            "Sorry machan, small connection error. Innoru thadava try pannu please!",
+            "Sorry, small connection error. Innoru thadava try pannu please!",
           suggested_followups: [],
         },
       ]);
