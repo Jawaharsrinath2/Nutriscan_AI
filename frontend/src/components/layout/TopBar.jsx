@@ -14,6 +14,11 @@ const PAGE_METADATA = {
     icon: "🔍",
     subtitle: "Inspect supermarket food labels, detect hidden sugars & harmful additives",
   },
+  [PATHS.menuDecider]: {
+    title: "Restaurant Menu Decider",
+    icon: "🍽️",
+    subtitle: "Cross-reference restaurant dishes with your remaining daily calories & macros",
+  },
   [PATHS.dashboard]: {
     title: "Nutrition Dashboard",
     icon: "📊",
@@ -31,7 +36,7 @@ const PAGE_METADATA = {
   },
 };
 
-export default function TopBar({ onOpenMobile }) {
+export default function TopBar({ onOpenMobile, onOpenVoiceLog }) {
   const { user } = useAuth();
   const { day, targets } = useAppState();
   const location = useLocation();
@@ -96,6 +101,19 @@ export default function TopBar({ onOpenMobile }) {
               <span className="hidden sm:inline">Remaining:</span>
               <span>{remainingKcal} kcal</span>
             </div>
+          )}
+
+          {/* Quick Tanglish Voice Log Button */}
+          {onOpenVoiceLog && (
+            <button
+              type="button"
+              onClick={onOpenVoiceLog}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold shadow-sm transition active:scale-95"
+              title="Log meal instantly with Tanglish voice"
+            >
+              <span className="text-sm">🎙️</span>
+              <span className="hidden sm:inline">Voice Log</span>
+            </button>
           )}
 
           {/* Mobile Profile Avatar */}

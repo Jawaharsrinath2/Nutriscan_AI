@@ -28,21 +28,12 @@ export const lookupBarcode = async (barcode) => {
 };
 
 export const auditPackagingPhoto = async (file) => {
-  const token = localStorage.getItem("auth_token");
   const formData = new FormData();
   formData.append("file", file);
-
-  const res = await fetch("/api/audit/photo", {
+  return request("/api/audit/photo", {
     method: "POST",
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
-    body: formData,
+    form: formData,
   });
-
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.detail || "Failed to analyze packaging photo");
-  }
-  return res.json();
 };
 
 export const logPackagedFoodToDiary = (payload) =>

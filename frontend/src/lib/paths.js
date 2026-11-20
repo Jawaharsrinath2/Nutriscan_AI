@@ -9,6 +9,7 @@ export const PATHS = {
   scan: "/scan",
   dashboard: "/dashboard",
   audit: "/audit",
+  menuDecider: "/menu-decider",
   dietPlan: "/dietplan",
   profile: "/profile",
   admin: "/admin",

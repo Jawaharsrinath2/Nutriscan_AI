@@ -15,6 +15,7 @@ export default function Sidebar({
   mobileOpen,
   onCloseMobile,
   onOpenVision,
+  onOpenVoiceLog,
 }) {
   const { user, isAdmin, logout } = useAuth();
   const { day, vision } = useAppState();
@@ -36,6 +37,13 @@ export default function Sidebar({
       label: "Packaged Food Audit",
       badge: "NEW",
       badgeColor: "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30",
+    },
+    {
+      to: PATHS.menuDecider,
+      icon: "🍽️",
+      label: "Restaurant Menu Decider",
+      badge: "AI FIT",
+      badgeColor: "bg-amber-500/20 text-amber-400 border border-amber-500/30",
     },
     {
       to: PATHS.dashboard,
@@ -138,6 +146,35 @@ export default function Sidebar({
             );
           })}
         </div>
+
+        {/* Tanglish Voice Meal Logger Quick Button */}
+        {onOpenVoiceLog && (
+          <div className="px-3 pt-1">
+            <button
+              type="button"
+              onClick={() => {
+                onCloseMobile?.();
+                onOpenVoiceLog?.();
+              }}
+              className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600/25 to-teal-600/15 hover:from-emerald-600/40 hover:to-teal-600/30 border border-emerald-500/35 text-emerald-300 hover:text-white text-xs font-bold transition shadow-2xs group ${
+                collapsed ? "justify-center px-2" : ""
+              }`}
+              title="Tanglish Voice Meal Logger"
+            >
+              <span className="text-base shrink-0 group-hover:scale-110 transition-transform">
+                🎙️
+              </span>
+              {!collapsed && (
+                <span className="flex-1 text-left truncate">Tanglish Voice Log</span>
+              )}
+              {!collapsed && (
+                <span className="text-[10px] font-extrabold px-1.5 py-0.5 rounded bg-emerald-400 text-emerald-950">
+                  AI
+                </span>
+              )}
+            </button>
+          </div>
+        )}
 
         {/* AI Vision Model Widget */}
         <div className="px-3 pt-2">

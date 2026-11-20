@@ -15,10 +15,10 @@ export async function request(path, { method = "GET", body, form, signal } = {})
     init.headers["Authorization"] = `Bearer ${token}`;
   }
 
-  if (form) {
-    init.body = form;
+  if (form || (typeof FormData !== "undefined" && body instanceof FormData)) {
+    init.body = form || body;
   } else if (body !== undefined) {
-    init.body = JSON.stringify(body);
+    init.body = typeof body === "string" ? body : JSON.stringify(body);
     init.headers["Content-Type"] = "application/json";
   }
 

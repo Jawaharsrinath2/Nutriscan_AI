@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import { useAppState } from "../context/AppState";
 import { fmt } from "../lib/format";
 import SummaryStrip from "../components/layout/SummaryStrip";
@@ -24,6 +25,8 @@ function formatDisplayDate(dateStr, todayStr) {
 /** /dashboard — summary metrics, today's log, progress chart and water. */
 export default function TrackerView() {
   const { day, targets, profile, water, selectedDate, todayDate, actions } = useAppState();
+  const outletContext = useOutletContext();
+  const openVoiceLog = outletContext?.openVoiceLog;
   const [shareOpen, setShareOpen] = useState(false);
   const isToday = !selectedDate || selectedDate === todayDate;
 
@@ -112,6 +115,18 @@ export default function TrackerView() {
                 Return to Today →
               </button>
             </div>
+          )}
+
+          {openVoiceLog && isToday && (
+            <button
+              type="button"
+              onClick={openVoiceLog}
+              className="p-2 sm:px-3 sm:py-2 rounded-xl border border-emerald-300 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold text-xs flex items-center gap-1.5 transition shadow-sm active:scale-95"
+              title="Log meals by speaking in Tanglish / Tamil"
+            >
+              <span>🎙️</span>
+              <span>Tanglish Voice Log</span>
+            </button>
           )}
 
           <button
