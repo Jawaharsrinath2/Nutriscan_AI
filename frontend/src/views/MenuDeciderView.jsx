@@ -168,10 +168,12 @@ export default function MenuDeciderView() {
 
   return (
     <div className="space-y-4 animate-fadeIn pb-12">
-      {/* Sleek, Compact Restaurant Decider & Diet Budget Header */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 text-white px-4 sm:px-5 py-3 border border-slate-700/60 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3">
-        <div className="flex items-center gap-3 min-w-0">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 p-0.5 shrink-0 flex items-center justify-center text-xl shadow-sm">
+      {/* Sleek, Compact Restaurant Decider & Diet Budget Header (Original Emerald/Teal Gradient) */}
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-700 text-white px-4 sm:px-5 py-3.5 shadow-md border border-emerald-500/30 flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div className="absolute -right-8 -bottom-8 w-40 h-40 rounded-full bg-white/10 blur-xl pointer-events-none" />
+
+        <div className="relative z-10 flex items-center gap-3 min-w-0">
+          <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur border border-white/25 p-0.5 shrink-0 flex items-center justify-center text-xl shadow-inner">
             🍽️
           </div>
           <div className="min-w-0">
@@ -179,39 +181,39 @@ export default function MenuDeciderView() {
               <h1 className="text-sm sm:text-base font-black text-white tracking-tight truncate">
                 Restaurant Menu Decider
               </h1>
-              <span className="hidden sm:inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shrink-0">
+              <span className="hidden sm:inline-flex px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-white/20 text-white border border-white/30 shrink-0">
                 🟢 Green • 🟡 Yellow • 🔴 Red AI Fit
               </span>
             </div>
-            <p className="text-xs text-slate-400 truncate max-w-xl">
+            <p className="text-xs text-emerald-100 truncate max-w-xl">
               Snap a menu or paste dishes to instantly verify what fits your daily calorie budget.
             </p>
           </div>
         </div>
 
         {/* Right side: Live remaining budget pills + Diet Preference filter */}
-        <div className="flex flex-wrap items-center gap-2 shrink-0 self-end md:self-auto text-xs">
-          <div className="px-3 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 font-bold flex items-center gap-1.5 shadow-2xs">
+        <div className="relative z-10 flex flex-wrap items-center gap-2 shrink-0 self-end md:self-auto text-xs">
+          <div className="px-3 py-1.5 rounded-xl bg-white/20 backdrop-blur border border-white/30 text-white font-bold flex items-center gap-1.5 shadow-xs">
             <span>🔥</span>
             <span>{remainingKcal} kcal left</span>
           </div>
 
-          <div className="px-3 py-1.5 rounded-xl bg-teal-500/15 border border-teal-500/30 text-teal-300 font-bold flex items-center gap-1.5 shadow-2xs">
+          <div className="px-3 py-1.5 rounded-xl bg-white/20 backdrop-blur border border-white/30 text-white font-bold flex items-center gap-1.5 shadow-xs">
             <span>💪</span>
             <span>{remainingProtein}g protein</span>
           </div>
 
-          <div className="flex items-center gap-1.5 bg-slate-800/90 border border-slate-700 rounded-xl px-2.5 py-1">
-            <span className="text-[11px] text-slate-400 font-semibold">Diet:</span>
+          <div className="flex items-center gap-1.5 bg-white/20 backdrop-blur border border-white/30 rounded-xl px-2.5 py-1">
+            <span className="text-[11px] text-emerald-100 font-semibold">Diet:</span>
             <select
               value={dietPref}
               onChange={(e) => setDietPref(e.target.value)}
-              className="bg-transparent text-xs font-bold text-slate-200 outline-none cursor-pointer"
+              className="bg-transparent text-xs font-bold text-white outline-none cursor-pointer"
             >
-              <option value="any" className="bg-slate-900 text-white">Any Food</option>
-              <option value="veg" className="bg-slate-900 text-white">Veg Only</option>
-              <option value="high_protein" className="bg-slate-900 text-white">High Protein</option>
-              <option value="low_carb" className="bg-slate-900 text-white">Low Carb</option>
+              <option value="any" className="bg-teal-900 text-white">Any Food</option>
+              <option value="veg" className="bg-teal-900 text-white">Veg Only</option>
+              <option value="high_protein" className="bg-teal-900 text-white">High Protein</option>
+              <option value="low_carb" className="bg-teal-900 text-white">Low Carb</option>
             </select>
           </div>
         </div>

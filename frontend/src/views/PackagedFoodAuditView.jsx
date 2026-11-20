@@ -255,10 +255,12 @@ export default function PackagedFoodAuditView() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4 space-y-4">
-      {/* Sleek, Compact Food Label Audit Header */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 text-white px-4 sm:px-5 py-3 border border-slate-700/60 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3">
-        <div className="flex items-center gap-3 min-w-0">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 p-0.5 shrink-0 flex items-center justify-center text-xl shadow-sm">
+      {/* Sleek, Compact Food Label Audit Header (Original Emerald/Teal Gradient) */}
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-700 text-white px-4 sm:px-5 py-3.5 shadow-md border border-emerald-500/30 flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div className="absolute right-0 top-0 translate-x-10 -translate-y-10 w-44 h-44 bg-white/10 rounded-full blur-xl pointer-events-none" />
+
+        <div className="relative z-10 flex items-center gap-3 min-w-0">
+          <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur border border-white/25 p-0.5 shrink-0 flex items-center justify-center text-xl shadow-inner">
             🔍
           </div>
           <div className="min-w-0">
@@ -266,18 +268,18 @@ export default function PackagedFoodAuditView() {
               <h1 className="text-sm sm:text-base font-black text-white tracking-tight truncate">
                 Packaged Food &amp; Barcode Health Audit
               </h1>
-              <span className="hidden sm:inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 shrink-0">
+              <span className="hidden sm:inline-flex px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-white/20 text-white border border-white/30 shrink-0">
                 NutriScore A to E • NOVA 1 to 4
               </span>
             </div>
-            <p className="text-xs text-slate-400 truncate max-w-xl">
+            <p className="text-xs text-emerald-100 truncate max-w-xl">
               Inspect supermarket food labels, detect hidden sugars &amp; palm oil, and log consumed portions.
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2 shrink-0 self-end md:self-auto text-xs">
-          <span className="px-3 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 font-bold flex items-center gap-1.5 shadow-2xs">
+        <div className="relative z-10 flex items-center gap-2 shrink-0 self-end md:self-auto text-xs">
+          <span className="px-3 py-1.5 rounded-xl bg-white/20 backdrop-blur border border-white/30 text-white font-bold flex items-center gap-1.5 shadow-xs">
             <span>⚡</span>
             <span>Instant Barcode &amp; Photo OCR</span>
           </span>
