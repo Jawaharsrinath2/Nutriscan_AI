@@ -32,10 +32,15 @@ const GOAL_LABELS = {
 
 function getGreetingName(user) {
   if (!user) return "Champion";
-  if (user.display_name?.trim()) return user.display_name.trim();
+  if (user.display_name?.trim()) {
+    const first = user.display_name.trim().split(" ")[0];
+    return first.charAt(0).toUpperCase() + first.slice(1).toLowerCase();
+  }
   if (user.username) {
     const raw = user.username.split("@")[0].replace(/[0-9]+$/, "");
-    return raw.charAt(0).toUpperCase() + raw.slice(1);
+    if (raw.toLowerCase().startsWith("jawahar")) return "Jawahar";
+    const first = raw.split(/[._\s]/)[0];
+    return first.charAt(0).toUpperCase() + first.slice(1).toLowerCase();
   }
   return "Champion";
 }
@@ -193,103 +198,52 @@ export default function TrackerView() {
         </div>
       </div>
 
-      {/* Welcome & Motivational Hero Banner */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-950 via-slate-900 to-emerald-950 text-white p-6 sm:p-7 border border-emerald-500/25 shadow-xl">
-        {/* Ambient decorative background glows */}
-        <div className="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-emerald-500/15 blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
-
-        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-          {/* Left: Avatar + Greeting + Motivational Subtitle */}
-          <div className="flex items-start sm:items-center gap-4 sm:gap-5">
-            {/* User Avatar with Glowing Active Ring */}
-            <div className="relative shrink-0">
-              <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl ring-2 ring-emerald-400/50 p-0.5 bg-gradient-to-br from-emerald-400 to-teal-600 shadow-lg overflow-hidden flex items-center justify-center">
-                {user?.avatar_url ? (
-                  <img src={user.avatar_url} alt="" className="w-full h-full object-cover rounded-[14px]" />
-                ) : (
-                  <div className="w-full h-full bg-slate-900 rounded-[14px] text-white flex items-center justify-center text-xl sm:text-2xl font-black uppercase">
-                    {(greetingName[0] || "U").toUpperCase()}
-                  </div>
-                )}
-              </div>
-              <span
-                className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-400 ring-2 ring-slate-950 flex items-center justify-center text-[8px] text-slate-950 font-black"
-                title="Active"
-              >
-                ✓
-              </span>
+      {/* Sleek, Compact Welcome Header */}
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 text-white px-4 sm:px-5 py-3 border border-slate-700/60 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="relative shrink-0">
+            <div className="w-10 h-10 rounded-xl ring-2 ring-emerald-500/40 p-0.5 bg-gradient-to-br from-emerald-400 to-teal-500 shadow-sm overflow-hidden flex items-center justify-center">
+              {user?.avatar_url ? (
+                <img src={user.avatar_url} alt="" className="w-full h-full object-cover rounded-[9px]" />
+              ) : (
+                <div className="w-full h-full bg-slate-900 rounded-[9px] text-white flex items-center justify-center text-sm font-black uppercase">
+                  {greetingName[0]}
+                </div>
+              )}
             </div>
-
-            <div className="space-y-1.5">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
-                  {isToday ? timeGreeting.badge : `Log for ${formatDisplayDate(selectedDate, todayDate)}`}
-                </span>
-                {profile?.profile?.goal && (
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold text-slate-300 bg-slate-800/80 border border-slate-700">
-                    🎯 {GOAL_LABELS[profile.profile.goal] || profile.profile.goal}
-                  </span>
-                )}
-                {isToday && mealCount > 0 && (
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold text-teal-300 bg-teal-500/10 border border-teal-500/30">
-                    🥗 {mealCount} {mealCount === 1 ? "Meal" : "Meals"} Logged
-                  </span>
-                )}
-              </div>
-
-              <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight flex items-center gap-2">
-                <span>{isToday ? timeGreeting.salutation : `Welcome Back, ${greetingName}!`}</span>
-              </h1>
-
-              <p className="text-xs sm:text-sm text-slate-300 max-w-xl leading-relaxed">
-                {isToday
-                  ? timeGreeting.subtitle
-                  : `Reviewing your nutritional intake and logged meals for ${formatDisplayDate(selectedDate, todayDate)}.`}
-              </p>
-            </div>
+            <span
+              className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-slate-900"
+              title="Active"
+            />
           </div>
 
-          {/* Right: Quick Snapshot Stats Pills */}
-          <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 shrink-0">
-            {/* Remaining Calories Pill */}
-            <div className="px-3.5 py-2 rounded-2xl bg-slate-900/90 border border-emerald-500/35 backdrop-blur flex items-center gap-2.5 shadow-inner">
-              <span className="text-2xl">🔥</span>
-              <div>
-                <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                  {isToday ? "Remaining Budget" : "Remaining"}
-                </div>
-                <div className="text-sm sm:text-base font-black text-emerald-400">
-                  {fmt(remainingKcal)} <span className="text-xs font-semibold text-slate-400">kcal</span>
-                </div>
-              </div>
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              <h1 className="text-sm sm:text-base font-black text-white tracking-tight truncate">
+                {isToday ? timeGreeting.salutation : `Welcome Back, ${greetingName}!`}
+              </h1>
+              <span className="hidden sm:inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shrink-0">
+                {isToday ? timeGreeting.badge : formatDisplayDate(selectedDate, todayDate)}
+              </span>
             </div>
+            <p className="text-xs text-slate-400 truncate max-w-xl">
+              {isToday
+                ? timeGreeting.subtitle
+                : `Reviewing intake and targets for ${formatDisplayDate(selectedDate, todayDate)}.`}
+            </p>
+          </div>
+        </div>
 
-            {/* Protein Left Pill */}
-            <div className="px-3.5 py-2 rounded-2xl bg-slate-900/90 border border-indigo-500/35 backdrop-blur flex items-center gap-2.5 shadow-inner">
-              <span className="text-2xl">💪</span>
-              <div>
-                <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                  Protein Needed
-                </div>
-                <div className="text-sm sm:text-base font-black text-indigo-400">
-                  {fmt(remainingProtein)} <span className="text-xs font-semibold text-slate-400">g</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Water Left Pill */}
-            <div className="px-3.5 py-2 rounded-2xl bg-slate-900/90 border border-sky-500/35 backdrop-blur flex items-center gap-2.5 shadow-inner">
-              <span className="text-2xl">💧</span>
-              <div>
-                <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                  Water Remaining
-                </div>
-                <div className="text-sm sm:text-base font-black text-sky-400">
-                  {remainingLitres} <span className="text-xs font-semibold text-slate-400">L</span>
-                </div>
-              </div>
-            </div>
+        {/* Right side: Goal + Remaining Pill */}
+        <div className="flex items-center gap-2 shrink-0 self-end md:self-auto text-xs">
+          {profile?.profile?.goal && (
+            <span className="hidden lg:inline-flex px-2.5 py-1 rounded-xl text-[11px] font-bold text-slate-300 bg-slate-800/80 border border-slate-700">
+              🎯 {GOAL_LABELS[profile.profile.goal] || profile.profile.goal}
+            </span>
+          )}
+          <div className="px-3 py-1 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-bold flex items-center gap-1.5 shadow-2xs">
+            <span>🔥</span>
+            <span>{fmt(remainingKcal)} kcal left</span>
           </div>
         </div>
       </div>
