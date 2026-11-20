@@ -1,23 +1,31 @@
 import { useState, useEffect, useRef } from "react";
+import { useAuth } from "../../context/AuthContext";
 import { useAppState } from "../../context/AppState";
 import { fetchStarterPrompts, sendChatMessage } from "../../api/chatbotApi";
 
+function getGreetingName(user) {
+  if (!user) return "Champion";
+  if (user.display_name?.trim()) {
+    const first = user.display_name.trim().split(" ")[0];
+    return first.charAt(0).toUpperCase() + first.slice(1).toLowerCase();
+  }
+  if (user.username) {
+    const raw = user.username.split("@")[0].replace(/[0-9]+$/, "");
+    if (raw.toLowerCase().startsWith("jawahar")) return "Jawahar";
+    const first = raw.split(/[._\s]/)[0];
+    return first.charAt(0).toUpperCase() + first.slice(1).toLowerCase();
+  }
+  return "Champion";
+}
+
 export default function NutritionistChatDrawer() {
+  const { user } = useAuth();
   const { day, targets, profile } = useAppState();
 
+  const greetingName = getGreetingName(user);
+
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState([
-    {
-      role: "assistant",
-      content:
-        "Vanakkam machan! 👋 Naan unoda 24/7 AI Nutritionist & Diet Coach. Unoda goals, today's logged meals, and balance calories pathi ellam enaku theriyum. Inaiku diet la enna doubt? Meal planning, healthy food swaps, or craving hacks edhavadhu kekalama!",
-      suggested_followups: [
-        "Inaiku dinner ku enna sapdalam?",
-        "Protein target reach aaga options sollu?",
-        "4 PM snack craving healthy-ah enna iruku?",
-      ],
-    },
-  ]);
+  const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState("");
   const [sending, setSending] = useState(false);
   const [starterPrompts, setStarterPrompts] = useState([]);
@@ -25,6 +33,23 @@ export default function NutritionistChatDrawer() {
 
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+
+  // Initialize personalized welcome message
+  useEffect(() => {
+    if (messages.length === 0) {
+      setMessages([
+        {
+          role: "assistant",
+          content: `Vanakkam ${greetingName}! 👋 Naan unoda 24/7 AI Nutritionist & Diet Coach. Unoda goals, today's logged meals, and balance calories pathi ellam enaku theriyum. Inaiku diet la enna doubt? Meal planning, healthy food swaps, or craving hacks edhavadhu kekalama!`,
+          suggested_followups: [
+            "Inaiku dinner ku enna sapdalam?",
+            "Protein target reach aaga options sollu?",
+            "4 PM snack craving healthy-ah enna iruku?",
+          ],
+        },
+      ]);
+    }
+  }, [greetingName, messages.length]);
 
   const remainingKcal = Math.max(0, (targets?.kcal ?? 0) - (day?.totals?.kcal ?? 0));
   const remainingProtein = Math.max(0, (targets?.protein ?? 0) - (day?.totals?.protein ?? 0));
