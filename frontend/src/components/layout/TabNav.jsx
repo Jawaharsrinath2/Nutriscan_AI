@@ -14,6 +14,9 @@ export default function TabNav({ mealCount }) {
       <NavLink to={PATHS.scan} className={tabClass}>
         📸 Food Scanner
       </NavLink>
+      <NavLink to={PATHS.audit} className={tabClass}>
+        🔍 Packaged Food Audit
+      </NavLink>
       <NavLink to={PATHS.dashboard} className={tabClass}>
         📊 Dashboard{" "}
         <span className="ml-1 px-1.5 py-0.2 bg-emerald-100 text-emerald-800 rounded-full text-xs">{mealCount}</span>

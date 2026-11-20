@@ -123,6 +123,34 @@ def trigger_user_reset_code(
     return MessageResponse(detail=f"Password reset verification code dispatched to {target_user.email}.")
 
 
+@router.post("/users/{user_id}/send-weekly-summary", response_model=MessageResponse)
+def trigger_user_weekly_summary(
+    user_id: int,
+    background_tasks: BackgroundTasks,
+    _: User = Depends(get_current_admin),
+    db: Session = Depends(get_db),
+) -> MessageResponse:
+    target_user = db.get(User, user_id)
+    if not target_user:
+        raise HTTPException(status_code=404, detail="User not found.")
+
+    background_tasks.add_task(email_service.send_weekly_summary_email, db, target_user)
+    return MessageResponse(detail=f"Weekly nutrition summary email dispatched to {target_user.email}.")
+
+
+@router.post("/broadcast-weekly-summary", response_model=MessageResponse)
+def trigger_broadcast_weekly_summary(
+    background_tasks: BackgroundTasks,
+    _: User = Depends(get_current_admin),
+    db: Session = Depends(get_db),
+) -> MessageResponse:
+    background_tasks.add_task(email_service.broadcast_weekly_summaries, db)
+    return MessageResponse(
+        detail="Weekly nutrition summaries are being broadcast to all active members in the background."
+    )
+
+
+
 @router.get("/users/{user_id}/detail", response_model=AdminUserDetailResponse)
 def get_user_detail(
     user_id: int,

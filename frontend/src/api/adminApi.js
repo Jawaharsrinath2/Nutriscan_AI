@@ -34,6 +34,17 @@ export const sendUserResetCode = (userId) =>
     method: "POST",
   });
 
+export const sendUserWeeklySummary = (userId) =>
+  request(`/api/admin/users/${userId}/send-weekly-summary`, {
+    method: "POST",
+  });
+
+export const broadcastWeeklySummary = () =>
+  request("/api/admin/broadcast-weekly-summary", {
+    method: "POST",
+  });
+
+
 export const fetchAdminUserDetail = (userId) => request(`/api/admin/users/${userId}/detail`);
 
 export const fetchAdminUserMeals = (userId, day) => {

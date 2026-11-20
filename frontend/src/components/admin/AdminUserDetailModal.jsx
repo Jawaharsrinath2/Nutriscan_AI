@@ -1,10 +1,18 @@
 import { useEffect, useState } from "react";
-import { fetchAdminUserDetail, fetchAdminUserMeals, fetchAdminUserPlans } from "../../api/adminApi";
+import {
+  fetchAdminUserDetail,
+  fetchAdminUserMeals,
+  fetchAdminUserPlans,
+  sendUserWeeklySummary,
+} from "../../api/adminApi";
+import { useToast } from "../../hooks/useToast";
 
 export default function AdminUserDetailModal({ userId, onClose }) {
+  const showToast = useToast();
   const [activeTab, setActiveTab] = useState("meals"); // "meals" | "plans" | "profile"
   const [detailData, setDetailData] = useState(null);
   const [loadingDetail, setLoadingDetail] = useState(true);
+  const [sendingWeekly, setSendingWeekly] = useState(false);
 
   // Meals state
   const [selectedDay, setSelectedDay] = useState("");
@@ -59,6 +67,18 @@ export default function AdminUserDetailModal({ userId, onClose }) {
         .finally(() => setLoadingPlans(false));
     }
   }, [activeTab, userId]);
+
+  const handleSendWeekly = async () => {
+    setSendingWeekly(true);
+    try {
+      const res = await sendUserWeeklySummary(userId);
+      showToast(res.detail || `Weekly digest dispatched to ${u?.email}`, "📊");
+    } catch (err) {
+      showToast(err.message || "Failed to send weekly digest", "⚠️");
+    } finally {
+      setSendingWeekly(false);
+    }
+  };
 
   if (!userId) return null;
 
@@ -131,14 +151,27 @@ export default function AdminUserDetailModal({ userId, onClose }) {
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={onClose}
-            className="w-8 h-8 rounded-full bg-slate-200/70 text-slate-600 hover:bg-slate-300 hover:text-slate-900 flex items-center justify-center text-sm font-bold transition"
-            title="Close modal (Esc)"
-          >
-            ✕
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              disabled={sendingWeekly}
+              onClick={handleSendWeekly}
+              className="px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-800 hover:bg-emerald-100 font-bold text-xs border border-emerald-200 transition shadow-xs flex items-center gap-1.5 disabled:opacity-50"
+              title="Calculate past 7-day stats and email weekly nutrition summary to this user"
+            >
+              <span>📊</span>
+              <span>{sendingWeekly ? "Sending…" : "Send Weekly Digest"}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={onClose}
+              className="w-8 h-8 rounded-full bg-slate-200/70 text-slate-600 hover:bg-slate-300 hover:text-slate-900 flex items-center justify-center text-sm font-bold transition"
+              title="Close modal (Esc)"
+            >
+              ✕
+            </button>
+          </div>
         </div>
 
         {/* Tab Navigation */}

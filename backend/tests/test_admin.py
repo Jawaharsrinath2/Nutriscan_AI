@@ -179,3 +179,35 @@ def test_admin_user_detail_meals_and_plans(admin_client, user_client):
     assert user_client.get(f"/api/admin/users/{user_id}/meals").status_code == 403
     assert user_client.get(f"/api/admin/users/{user_id}/plans").status_code == 403
 
+
+def test_admin_weekly_summary_email_flow(admin_client, user_client):
+    # 1. Verify weekly_summary template is present
+    templates_res = admin_client.get("/api/admin/emails")
+    assert templates_res.status_code == 200
+    keys = [t["key"] for t in templates_res.json()]
+    assert "weekly_summary" in keys
+
+    # 2. Preview weekly_summary template
+    preview_res = admin_client.post(
+        "/api/admin/emails/weekly_summary/preview",
+        json={"sample_context": {"username": "Karthik", "meals_count": 15}},
+    )
+    assert preview_res.status_code == 200
+    assert "Weekly Nutrition" in preview_res.json()["subject"] or "meals logged" in preview_res.json()["subject"]
+    assert "Karthik" in preview_res.json()["html"]
+
+    # 3. Find user id
+    users_res = admin_client.get("/api/admin/users")
+    user_id = next(u["id"] for u in users_res.json()["users"] if u["username"] == "tester")
+
+    # 4. Trigger send weekly summary to user
+    send_res = admin_client.post(f"/api/admin/users/{user_id}/send-weekly-summary")
+    assert send_res.status_code == 200
+    assert "Weekly nutrition summary email dispatched" in send_res.json()["detail"]
+
+    # 5. Trigger broadcast
+    broadcast_res = admin_client.post("/api/admin/broadcast-weekly-summary")
+    assert broadcast_res.status_code == 200
+    assert "Weekly nutrition summaries are being broadcast" in broadcast_res.json()["detail"]
+
+

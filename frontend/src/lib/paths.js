@@ -8,6 +8,7 @@ export const PATHS = {
   profileEdit: (step) => `/profile/edit/${step}`,
   scan: "/scan",
   dashboard: "/dashboard",
+  audit: "/audit",
   dietPlan: "/dietplan",
   profile: "/profile",
   admin: "/admin",

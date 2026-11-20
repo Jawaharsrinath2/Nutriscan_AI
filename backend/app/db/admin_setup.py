@@ -21,6 +21,29 @@ DEFAULT_TEMPLATES_META = {
         "description": "Sent when a user requests a password reset code",
         "variables": ["username", "code", "expires_minutes", "app_url", "app_name", "support_email", "current_year"],
     },
+    "weekly_summary": {
+        "name": "Weekly Nutrition Summary",
+        "description": "Weekly digest summarizing calorie and protein targets, logged meals, hydration, and AI coach tips",
+        "variables": [
+            "username",
+            "start_date",
+            "end_date",
+            "meals_count",
+            "days_active",
+            "streak_days",
+            "avg_kcal",
+            "target_kcal",
+            "avg_protein",
+            "target_protein",
+            "total_water_glasses",
+            "total_water_liters",
+            "coach_tip",
+            "app_url",
+            "app_name",
+            "support_email",
+            "current_year",
+        ],
+    },
 }
 
 

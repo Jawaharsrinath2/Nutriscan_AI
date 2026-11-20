@@ -11,7 +11,7 @@ from __future__ import annotations
 import json
 import logging
 import smtplib
-from datetime import datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from pathlib import Path
@@ -185,6 +185,146 @@ def send_password_reset_email(to_email: str, username: str, code: str, expiry_mi
     return send_email(to_email, subject, html_body, text_body)
 
 
+def get_weekly_summary_context(db: Any, user: Any, end_date: date | None = None) -> dict[str, Any]:
+    """Aggregates the past 7 days of nutrition and hydration for a user and generates smart AI coach tips."""
+    if end_date is None:
+        end_date = date.today()
+    start_date = end_date - timedelta(days=6)
+
+    from sqlalchemy import func, select
+    from app.db.models import DailyGoals, MealLog, WaterLog
+
+    # Fetch meals in range
+    meals = db.scalars(
+        select(MealLog).where(
+            MealLog.user_id == user.id,
+            MealLog.day >= start_date,
+            MealLog.day <= end_date,
+        )
+    ).all()
+
+    meals_count = len(meals)
+    distinct_active_days = len({m.day for m in meals})
+
+    tot_kcal = sum(m.kcal or 0 for m in meals)
+    tot_protein = sum(m.protein or 0.0 for m in meals)
+
+    # Average per day across the 7-day period
+    avg_kcal = round(tot_kcal / 7) if meals_count > 0 else 0
+    avg_protein = round(tot_protein / 7, 1) if meals_count > 0 else 0.0
+
+    # Fetch water logs in range
+    water_glasses_sum = (
+        db.scalar(
+            select(func.coalesce(func.sum(WaterLog.glasses), 0)).where(
+                WaterLog.user_id == user.id,
+                WaterLog.day >= start_date,
+                WaterLog.day <= end_date,
+            )
+        )
+        or 0
+    )
+    total_water_liters = round(water_glasses_sum * 0.25, 1)
+
+    # Fetch target goals
+    goals = db.get(DailyGoals, user.id)
+    target_kcal = goals.kcal if goals else 2100
+    target_protein = goals.protein if goals else 135
+
+    # Calculate streak (consecutive days logged backwards from end_date)
+    streak_days = 0
+    check_day = end_date
+    logged_days_set = {m.day for m in meals}
+    for _ in range(7):
+        if check_day in logged_days_set:
+            streak_days += 1
+            check_day -= timedelta(days=1)
+        else:
+            break
+
+    # Generate supportive Coach Tip
+    if distinct_active_days >= 6:
+        if avg_protein >= target_protein * 0.9:
+            coach_tip = (
+                "Phenomenal consistency! You maintained an active logging streak and crushed your daily protein targets. "
+                "Keep this high momentum rolling into next week!"
+            )
+        else:
+            coach_tip = (
+                f"Outstanding logging consistency across {distinct_active_days} days! For next week, try boosting your protein slightly "
+                f"with eggs, paneer, sprouts, or chicken to hit your {target_protein}g goal."
+            )
+    elif distinct_active_days >= 3:
+        coach_tip = (
+            f"Solid effort with {meals_count} meals logged across {distinct_active_days} days! "
+            f"Aim to log your breakfast and lunch consistently to build a full 7-day habit next week."
+        )
+    else:
+        coach_tip = (
+            "Every step counts! Try setting a small goal for next week: snap and scan at least one meal a day. "
+            "Our camera vision makes checking portions and macros effortless."
+        )
+
+    return {
+        "username": user.username,
+        "email": user.email,
+        "start_date": start_date.strftime("%b %d, %Y"),
+        "end_date": end_date.strftime("%b %d, %Y"),
+        "meals_count": meals_count,
+        "days_active": distinct_active_days,
+        "streak_days": streak_days,
+        "avg_kcal": avg_kcal,
+        "target_kcal": target_kcal,
+        "avg_protein": avg_protein,
+        "target_protein": target_protein,
+        "total_water_glasses": water_glasses_sum,
+        "total_water_liters": total_water_liters,
+        "coach_tip": coach_tip,
+    }
+
+
+def send_weekly_summary_email(db: Any, user: Any, end_date: date | None = None) -> bool:
+    """Calculates weekly stats and sends the weekly digest to the user."""
+    context = get_weekly_summary_context(db, user, end_date)
+    subject, html_body, text_body = load_email_template("weekly_summary", context, db=db)
+    return send_email(user.email, subject, html_body, text_body)
+
+
+def send_user_weekly_summary(db: Any, user_id: int) -> dict[str, Any]:
+    from fastapi import HTTPException
+    from app.db.models import User
+
+    user = db.get(User, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found.")
+
+    context = get_weekly_summary_context(db, user)
+    sent = send_weekly_summary_email(db, user)
+    return {"user_id": user.id, "email": user.email, "sent": sent, "summary": context}
+
+
+def broadcast_weekly_summaries(db: Any) -> dict[str, Any]:
+    from sqlalchemy import select
+    from app.db.models import User
+
+    users = db.scalars(select(User).where(User.is_active == True)).all()
+    sent_count = 0
+    failed_count = 0
+
+    for u in users:
+        try:
+            if send_weekly_summary_email(db, u):
+                sent_count += 1
+            else:
+                failed_count += 1
+        except Exception as exc:
+            logger.error("Failed to send weekly summary to %s: %s", u.email, exc)
+            failed_count += 1
+
+    return {"total_users": len(users), "sent": sent_count, "failed": failed_count}
+
+
+
 def get_latest_mock_email(email: str | None = None) -> dict[str, Any] | None:
     """Helper to inspect the latest mock sent email in dev / testing."""
     if not _mock_outbox:
@@ -279,6 +419,18 @@ def render_template_preview(
         "email": "alex.johnson@example.com",
         "code": "849201",
         "expiry_minutes": 15,
+        "start_date": "Nov 12, 2026",
+        "end_date": "Nov 18, 2026",
+        "meals_count": 18,
+        "days_active": 6,
+        "streak_days": 6,
+        "avg_kcal": 2040,
+        "target_kcal": 2100,
+        "avg_protein": 128.5,
+        "target_protein": 135,
+        "total_water_glasses": 44,
+        "total_water_liters": 11.0,
+        "coach_tip": "Outstanding consistency this week! You hit your protein target on 5 out of 7 days. For next week, aim to add an extra glass of water on your workout days to optimize recovery.",
         **(sample_context or {}),
     }
 

@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { useAppState } from "../context/AppState";
 import { fmt } from "../lib/format";
 import SummaryStrip from "../components/layout/SummaryStrip";
 import DailyProgressChart from "../components/tracker/DailyProgressChart";
 import HydrationTracker from "../components/tracker/HydrationTracker";
 import LoggedMeals from "../components/tracker/LoggedMeals";
+import SocialShareCardModal from "../components/share/SocialShareCardModal";
 
 function formatDisplayDate(dateStr, todayStr) {
   if (!dateStr) return "";
@@ -22,6 +24,7 @@ function formatDisplayDate(dateStr, todayStr) {
 /** /dashboard — summary metrics, today's log, progress chart and water. */
 export default function TrackerView() {
   const { day, targets, profile, water, selectedDate, todayDate, actions } = useAppState();
+  const [shareOpen, setShareOpen] = useState(false);
   const isToday = !selectedDate || selectedDate === todayDate;
 
   const remainingKcal = Math.max(0, (targets?.kcal ?? 0) - (day?.totals?.kcal ?? 0));
@@ -94,21 +97,33 @@ export default function TrackerView() {
           </button>
         </div>
 
-        {!isToday && (
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-amber-800 bg-amber-50 border border-amber-200/80 px-3 py-1.5 rounded-xl font-medium flex items-center gap-1.5">
-              <span>🕒</span>
-              <span>Viewing past log: <strong>{formatDisplayDate(selectedDate, todayDate)}</strong></span>
-            </span>
-            <button
-              type="button"
-              onClick={() => actions.setSelectedDate(todayDate)}
-              className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition shadow-sm"
-            >
-              Return to Today →
-            </button>
-          </div>
-        )}
+        <div className="flex items-center gap-2">
+          {!isToday && (
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-amber-800 bg-amber-50 border border-amber-200/80 px-3 py-1.5 rounded-xl font-medium flex items-center gap-1.5">
+                <span>🕒</span>
+                <span>Viewing past log: <strong>{formatDisplayDate(selectedDate, todayDate)}</strong></span>
+              </span>
+              <button
+                type="button"
+                onClick={() => actions.setSelectedDate(todayDate)}
+                className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition shadow-sm"
+              >
+                Return to Today →
+              </button>
+            </div>
+          )}
+
+          <button
+            type="button"
+            onClick={() => setShareOpen(true)}
+            className="p-2 sm:px-3 sm:py-2 rounded-xl border border-slate-200 hover:border-emerald-300 bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 font-bold text-xs flex items-center gap-1.5 transition shadow-sm"
+            title="Create shareable daily progress card for Instagram / WhatsApp"
+          >
+            <span>📸</span>
+            <span>Share Daily Card</span>
+          </button>
+        </div>
       </div>
 
       {/* Remaining Today & Protein Left Banner */}
@@ -162,6 +177,21 @@ export default function TrackerView() {
           <HydrationTracker />
         </div>
       </div>
+
+      <SocialShareCardModal
+        isOpen={shareOpen}
+        onClose={() => setShareOpen(false)}
+        type="daily"
+        data={{
+          date: selectedDate || todayDate,
+          consumedKcal: day?.totals?.kcal || 0,
+          targetKcal: targets?.kcal || 2000,
+          consumedProtein: day?.totals?.protein || 0,
+          targetProtein: targets?.protein || 120,
+          glasses: currentGlasses,
+          mealsCount: day?.meals?.length || 0,
+        }}
+      />
     </section>
   );
 }

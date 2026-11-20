@@ -7,12 +7,15 @@ import StatusCard from "../common/StatusCard";
 import CameraModal from "../modals/CameraModal";
 import ConfirmWeightsModal from "../modals/ConfirmWeightsModal";
 import VisionModeModal from "../modals/VisionModeModal";
-import Header from "./Header";
+import Sidebar from "./Sidebar";
+import TopBar from "./TopBar";
 
-/** Chrome shared by the signed-in pages (/scan, /dashboard, /dietplan): header, modals, camera. */
+/** Chrome shared by the signed-in pages: Left Sidebar, TopBar, modals, camera. */
 export default function AppLayout() {
   const { ready, needsOnboarding, loadError, confirmWeightsOpen, actions } = useAppState();
   const [visionOpen, setVisionOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const camera = useCamera();
 
   // First sign-in: collect the profile before anything else.
@@ -30,16 +33,28 @@ export default function AppLayout() {
   };
 
   return (
-    <>
-      <Header onOpenVision={() => setVisionOpen(true)} />
+    <div className="min-h-screen bg-slate-50 flex">
+      {/* Sleek Modern Left Sidebar */}
+      <Sidebar
+        collapsed={sidebarCollapsed}
+        onToggleCollapse={() => setSidebarCollapsed((prev) => !prev)}
+        mobileOpen={mobileMenuOpen}
+        onCloseMobile={() => setMobileMenuOpen(false)}
+        onOpenVision={() => setVisionOpen(true)}
+      />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 space-y-6">
-        {ready ? <Outlet context={{ camera }} /> : <StatusCard error={loadError} />}
-      </main>
+      {/* Main Content Workspace */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-x-hidden">
+        <TopBar onOpenMobile={() => setMobileMenuOpen(true)} />
+
+        <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+          {ready ? <Outlet context={{ camera }} /> : <StatusCard error={loadError} />}
+        </main>
+      </div>
 
       <CameraModal camera={camera} onCapture={captureFromCamera} />
       <VisionModeModal open={visionOpen} onClose={() => setVisionOpen(false)} />
       <ConfirmWeightsModal open={confirmWeightsOpen} onClose={actions.closeConfirmWeights} />
-    </>
+    </div>
   );
 }

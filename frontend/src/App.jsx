@@ -12,6 +12,7 @@ import OnboardingView from "./views/OnboardingView";
 import ScannerView from "./views/ScannerView";
 import TrackerView from "./views/TrackerView";
 import ProfileView from "./views/ProfileView";
+import PackagedFoodAuditView from "./views/PackagedFoodAuditView";
 import AdminRoute from "./components/admin/AdminRoute";
 import AdminLayout from "./views/admin/AdminLayout";
 
@@ -123,6 +124,7 @@ export default function App() {
 
       <Route element={<RequireUser><AppLayout /></RequireUser>}>
         <Route path={PATHS.scan} element={<Titled title="Food Scanner"><ScannerView /></Titled>} />
+        <Route path={PATHS.audit} element={<Titled title="Packaged Food Audit"><PackagedFoodAuditView /></Titled>} />
         <Route path={PATHS.dashboard} element={<Titled title="Dashboard"><TrackerView /></Titled>} />
         <Route path={PATHS.dietPlan} element={<Titled title="Diet Plan & Goals"><GoalsView /></Titled>} />
         <Route path={PATHS.profile} element={<Titled title="Profile & Settings"><ProfileView /></Titled>} />

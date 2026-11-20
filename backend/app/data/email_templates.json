@@ -10,5 +10,11 @@
     "html_template": "password_reset.html",
     "text_template": "password_reset.txt",
     "description": "Sent when a user requests a password reset code"
+  },
+  "weekly_summary": {
+    "subject": "Your Weekly Nutrition Digest: {{ meals_count }} meals logged! 📊",
+    "html_template": "weekly_summary.html",
+    "text_template": "weekly_summary.txt",
+    "description": "Weekly progress digest summarizing calories, protein targets, hydration, and AI coach tips"
   }
 }

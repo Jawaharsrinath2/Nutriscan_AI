@@ -1,0 +1,22 @@
+Hello {{ username }},
+
+Here is your NutriScan AI Weekly Nutrition Digest for {{ start_date }} to {{ end_date }}:
+
+HIGHLIGHTS:
+- Meals Logged: {{ meals_count }} meals ({{ days_active }} / 7 active days)
+- Consistency Streak: {{ streak_days }} days
+- Daily Average Calories: {{ avg_kcal }} kcal (Target: {{ target_kcal }} kcal)
+- Daily Average Protein: {{ avg_protein }}g (Target: {{ target_protein }}g)
+- Total Water Intake: {{ total_water_glasses }} glasses (~{{ total_water_liters }} Liters)
+
+AI COACH INSIGHT:
+{{ coach_tip }}
+
+View your full dashboard and upcoming meal plan here:
+{{ app_url }}/dashboard
+
+Keep up the great work!
+The NutriScan AI Team
+
+---
+© {{ current_year }} NutriScan AI. Sent to {{ email }}.

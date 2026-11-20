@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useAppState } from "../../context/AppState";
 import { fmt } from "../../lib/format";
 import DietVerdict from "./DietVerdict";
@@ -6,9 +7,11 @@ import LogMealBar from "./LogMealBar";
 import MacroCards from "./MacroCards";
 import MacroDoughnut from "./MacroDoughnut";
 import PortionScale from "./PortionScale";
+import SocialShareCardModal from "../share/SocialShareCardModal";
 
 export default function NutritionReport() {
   const { plate, evaluation, actions } = useAppState();
+  const [shareOpen, setShareOpen] = useState(false);
 
   return (
     <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 space-y-5">
@@ -23,6 +26,17 @@ export default function NutritionReport() {
           <h2 className="text-xl font-extrabold text-slate-900 mt-0.5">{plate.title || "No Meal Selected"}</h2>
         </div>
         <div className="flex items-center gap-2">
+          {evaluation && (
+            <button
+              type="button"
+              onClick={() => setShareOpen(true)}
+              className="px-3 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 hover:text-emerald-700 text-xs font-bold flex items-center gap-1.5 transition shadow-sm"
+              title="Generate high-res social share card for Instagram / WhatsApp"
+            >
+              <span>📸</span>
+              <span className="hidden sm:inline">Share Card</span>
+            </button>
+          )}
           <button
             type="button"
             onClick={actions.openConfirmWeights}
@@ -45,6 +59,23 @@ export default function NutritionReport() {
       </div>
 
       <LogMealBar />
+
+      <SocialShareCardModal
+        isOpen={shareOpen}
+        onClose={() => setShareOpen(false)}
+        type="meal"
+        data={{
+          title: plate.title,
+          image_url: plate.image_url,
+          kcal: evaluation?.totals?.kcal,
+          protein: evaluation?.totals?.protein,
+          carbs: evaluation?.totals?.carbs,
+          fat: evaluation?.totals?.fat,
+          fiber: evaluation?.totals?.fiber,
+          total_grams: evaluation?.totals?.total_grams,
+          verdict: evaluation?.verdict?.summary || evaluation?.verdict?.notes,
+        }}
+      />
     </div>
   );
 }
