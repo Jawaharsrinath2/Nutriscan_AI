@@ -167,55 +167,53 @@ export default function MenuDeciderView() {
   });
 
   return (
-    <div className="space-y-6 animate-fadeIn pb-12">
-      {/* Top Hero Banner */}
-      <div className="rounded-3xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-700 text-white p-6 sm:p-8 shadow-xl relative overflow-hidden">
-        <div className="absolute -right-8 -bottom-8 w-44 h-44 rounded-full bg-white/10 blur-2xl pointer-events-none" />
-        <div className="relative z-10 max-w-2xl space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur text-xs font-bold uppercase tracking-wider text-emerald-100">
-            <span>🍽️ Smart Restaurant Eating Guide</span>
+    <div className="space-y-4 animate-fadeIn pb-12">
+      {/* Sleek, Compact Restaurant Decider & Diet Budget Header */}
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 text-white px-4 sm:px-5 py-3 border border-slate-700/60 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 p-0.5 shrink-0 flex items-center justify-center text-xl shadow-sm">
+            🍽️
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
-            Restaurant Menu Decider
-          </h1>
-          <p className="text-sm text-emerald-100 leading-relaxed">
-            Snap any restaurant paper menu, Swiggy/Zomato screenshot, or paste dish names.
-            Gemini audits each dish into 🟢 Green (Best Fit), 🟡 Yellow (Moderate / Share), and 🔴 Red (Target Breakers) against today&apos;s remaining calories!
-          </p>
-        </div>
-      </div>
-
-      {/* User Budget Status Strip */}
-      <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-xl">
-            🎯
-          </div>
-          <div>
-            <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-              Your Current Diet Budget Context
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              <h1 className="text-sm sm:text-base font-black text-white tracking-tight truncate">
+                Restaurant Menu Decider
+              </h1>
+              <span className="hidden sm:inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shrink-0">
+                🟢 Green • 🟡 Yellow • 🔴 Red AI Fit
+              </span>
             </div>
-            <div className="flex items-center gap-3 text-sm font-black text-slate-900 mt-0.5">
-              <span>🔥 Remaining: <strong className="text-emerald-600">{remainingKcal} kcal</strong></span>
-              <span className="text-slate-300">•</span>
-              <span>💪 Protein Needed: <strong className="text-teal-600">{remainingProtein}g</strong></span>
-            </div>
+            <p className="text-xs text-slate-400 truncate max-w-xl">
+              Snap a menu or paste dishes to instantly verify what fits your daily calorie budget.
+            </p>
           </div>
         </div>
 
-        {/* Diet Preference Filter */}
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-bold text-slate-600">Preference:</span>
-          <select
-            value={dietPref}
-            onChange={(e) => setDietPref(e.target.value)}
-            className="px-3 py-1.5 rounded-xl bg-slate-100 border border-slate-200 text-xs font-bold text-slate-700 outline-none focus:border-emerald-500"
-          >
-            <option value="any">Any Food</option>
-            <option value="veg">Vegetarian Only</option>
-            <option value="high_protein">High Protein Focus</option>
-            <option value="low_carb">Low Carb / Keto</option>
-          </select>
+        {/* Right side: Live remaining budget pills + Diet Preference filter */}
+        <div className="flex flex-wrap items-center gap-2 shrink-0 self-end md:self-auto text-xs">
+          <div className="px-3 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 font-bold flex items-center gap-1.5 shadow-2xs">
+            <span>🔥</span>
+            <span>{remainingKcal} kcal left</span>
+          </div>
+
+          <div className="px-3 py-1.5 rounded-xl bg-teal-500/15 border border-teal-500/30 text-teal-300 font-bold flex items-center gap-1.5 shadow-2xs">
+            <span>💪</span>
+            <span>{remainingProtein}g protein</span>
+          </div>
+
+          <div className="flex items-center gap-1.5 bg-slate-800/90 border border-slate-700 rounded-xl px-2.5 py-1">
+            <span className="text-[11px] text-slate-400 font-semibold">Diet:</span>
+            <select
+              value={dietPref}
+              onChange={(e) => setDietPref(e.target.value)}
+              className="bg-transparent text-xs font-bold text-slate-200 outline-none cursor-pointer"
+            >
+              <option value="any" className="bg-slate-900 text-white">Any Food</option>
+              <option value="veg" className="bg-slate-900 text-white">Veg Only</option>
+              <option value="high_protein" className="bg-slate-900 text-white">High Protein</option>
+              <option value="low_carb" className="bg-slate-900 text-white">Low Carb</option>
+            </select>
+          </div>
         </div>
       </div>
 

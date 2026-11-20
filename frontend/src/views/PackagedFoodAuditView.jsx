@@ -254,22 +254,33 @@ export default function PackagedFoodAuditView() {
   const novaStyle = NOVA_LABELS[auditResult?.nova_group] || NOVA_LABELS[4];
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 space-y-6">
-      {/* Hero Title */}
-      <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-700 text-white p-5 sm:p-6 rounded-2xl shadow-md relative overflow-hidden">
-        <div className="absolute right-0 top-0 translate-x-10 -translate-y-10 w-48 h-48 bg-white/10 rounded-full blur-2xl pointer-events-none" />
-        <div className="relative z-10 space-y-1.5">
-          <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-white/15 backdrop-blur text-[11px] font-bold uppercase tracking-wider text-emerald-100 border border-white/20">
-            <span>🔍 Food Intelligence</span>
-            <span>•</span>
-            <span>Supermarket Label Auditor</span>
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4 space-y-4">
+      {/* Sleek, Compact Food Label Audit Header */}
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 text-white px-4 sm:px-5 py-3 border border-slate-700/60 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 p-0.5 shrink-0 flex items-center justify-center text-xl shadow-sm">
+            🔍
           </div>
-          <h1 className="text-xl sm:text-3xl font-extrabold tracking-tight">
-            Packaged Food &amp; Barcode Health Audit
-          </h1>
-          <p className="text-emerald-100 text-xs sm:text-sm max-w-2xl leading-relaxed">
-            Scan any supermarket food barcode or snap its back nutrition label. Instantly detect hidden sugars, refined palm oil, and harmful additives, and log consumed portions to your daily target.
-          </p>
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              <h1 className="text-sm sm:text-base font-black text-white tracking-tight truncate">
+                Packaged Food &amp; Barcode Health Audit
+              </h1>
+              <span className="hidden sm:inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 shrink-0">
+                NutriScore A to E • NOVA 1 to 4
+              </span>
+            </div>
+            <p className="text-xs text-slate-400 truncate max-w-xl">
+              Inspect supermarket food labels, detect hidden sugars &amp; palm oil, and log consumed portions.
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 shrink-0 self-end md:self-auto text-xs">
+          <span className="px-3 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 font-bold flex items-center gap-1.5 shadow-2xs">
+            <span>⚡</span>
+            <span>Instant Barcode &amp; Photo OCR</span>
+          </span>
         </div>
       </div>
 
