@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useOutletContext } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import { useAppState } from "../context/AppState";
 import { fmt } from "../lib/format";
 import SummaryStrip from "../components/layout/SummaryStrip";
@@ -22,13 +23,64 @@ function formatDisplayDate(dateStr, todayStr) {
   return target.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
 }
 
+const GOAL_LABELS = {
+  lose: "Fat Loss & Calorie Deficit",
+  gain: "Lean Muscle Hypertrophy",
+  strength: "Strength & Power",
+  maintain: "Healthy Maintenance",
+};
+
+function getGreetingName(user) {
+  if (!user) return "Champion";
+  if (user.display_name?.trim()) return user.display_name.trim();
+  if (user.username) {
+    const raw = user.username.split("@")[0].replace(/[0-9]+$/, "");
+    return raw.charAt(0).toUpperCase() + raw.slice(1);
+  }
+  return "Champion";
+}
+
+function getTimeGreeting(name) {
+  const hour = new Date().getHours();
+  if (hour >= 5 && hour < 12) {
+    return {
+      salutation: `Good Morning, ${name}! ☀️`,
+      subtitle: "Time to fuel your day with clean, high-protein nutrition. Let's smash today's targets!",
+      badge: "Breakfast Phase",
+    };
+  } else if (hour >= 12 && hour < 17) {
+    return {
+      salutation: `Good Afternoon, ${name}! 🥗`,
+      subtitle: "Mid-day recharge! Stay mindful of portion sizes and keep your hydration steady.",
+      badge: "Afternoon Momentum",
+    };
+  } else if (hour >= 17 && hour < 21) {
+    return {
+      salutation: `Good Evening, ${name}! 🌅`,
+      subtitle: "Reviewing today's wins! Plan a clean, balanced dinner to finish within your target budget.",
+      badge: "Dinner Phase",
+    };
+  } else {
+    return {
+      salutation: `Night Owl Mode, ${name}! 🌙`,
+      subtitle: "Late-night check-in. Rest, recovery, and water are essential for tomorrow's performance.",
+      badge: "Rest & Recovery",
+    };
+  }
+}
+
 /** /dashboard — summary metrics, today's log, progress chart and water. */
 export default function TrackerView() {
+  const { user } = useAuth();
   const { day, targets, profile, water, selectedDate, todayDate, actions } = useAppState();
   const outletContext = useOutletContext();
   const openVoiceLog = outletContext?.openVoiceLog;
   const [shareOpen, setShareOpen] = useState(false);
   const isToday = !selectedDate || selectedDate === todayDate;
+
+  const greetingName = getGreetingName(user);
+  const timeGreeting = getTimeGreeting(greetingName);
+  const mealCount = day?.meals?.length ?? 0;
 
   const remainingKcal = Math.max(0, (targets?.kcal ?? 0) - (day?.totals?.kcal ?? 0));
   const remainingProtein = Math.max(0, (targets?.protein ?? 0) - (day?.totals?.protein ?? 0));
@@ -141,43 +193,102 @@ export default function TrackerView() {
         </div>
       </div>
 
-      {/* Remaining Today & Protein Left Banner */}
-      <div className="bg-gradient-to-r from-emerald-50 via-teal-50 to-indigo-50 border border-emerald-200/80 rounded-2xl p-4 sm:p-5 flex flex-wrap items-center justify-between gap-4 shadow-sm">
-        <div>
-          <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100/80 px-2.5 py-0.5 rounded-full">
-            {isToday ? "Daily Budget Status" : `Log for ${formatDisplayDate(selectedDate, todayDate)}`}
-          </span>
-          <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 mt-1">
-            {isToday ? "Today's Nutrition Dashboard" : `Nutrition Dashboard (${selectedDate})`}
-          </h2>
-          <p className="text-xs text-slate-500 mt-0.5">
-            {isToday
-              ? "Track your logged meals, remaining targets and hydration"
-              : `Meals, macros, and hydration logged on ${selectedDate}`}
-          </p>
-        </div>
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="bg-white border border-emerald-200 px-3.5 py-2 rounded-xl flex items-center gap-2.5 shadow-sm">
-            <span className="text-xl">🔥</span>
-            <div>
-              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                {isToday ? "Remaining Today" : "Remaining Target"}
+      {/* Welcome & Motivational Hero Banner */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-950 via-slate-900 to-emerald-950 text-white p-6 sm:p-7 border border-emerald-500/25 shadow-xl">
+        {/* Ambient decorative background glows */}
+        <div className="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-emerald-500/15 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          {/* Left: Avatar + Greeting + Motivational Subtitle */}
+          <div className="flex items-start sm:items-center gap-4 sm:gap-5">
+            {/* User Avatar with Glowing Active Ring */}
+            <div className="relative shrink-0">
+              <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl ring-2 ring-emerald-400/50 p-0.5 bg-gradient-to-br from-emerald-400 to-teal-600 shadow-lg overflow-hidden flex items-center justify-center">
+                {user?.avatar_url ? (
+                  <img src={user.avatar_url} alt="" className="w-full h-full object-cover rounded-[14px]" />
+                ) : (
+                  <div className="w-full h-full bg-slate-900 rounded-[14px] text-white flex items-center justify-center text-xl sm:text-2xl font-black uppercase">
+                    {(greetingName[0] || "U").toUpperCase()}
+                  </div>
+                )}
               </div>
-              <div className="text-sm sm:text-base font-extrabold text-emerald-700">{fmt(remainingKcal)} kcal</div>
+              <span
+                className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-400 ring-2 ring-slate-950 flex items-center justify-center text-[8px] text-slate-950 font-black"
+                title="Active"
+              >
+                ✓
+              </span>
+            </div>
+
+            <div className="space-y-1.5">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                  {isToday ? timeGreeting.badge : `Log for ${formatDisplayDate(selectedDate, todayDate)}`}
+                </span>
+                {profile?.profile?.goal && (
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold text-slate-300 bg-slate-800/80 border border-slate-700">
+                    🎯 {GOAL_LABELS[profile.profile.goal] || profile.profile.goal}
+                  </span>
+                )}
+                {isToday && mealCount > 0 && (
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold text-teal-300 bg-teal-500/10 border border-teal-500/30">
+                    🥗 {mealCount} {mealCount === 1 ? "Meal" : "Meals"} Logged
+                  </span>
+                )}
+              </div>
+
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight flex items-center gap-2">
+                <span>{isToday ? timeGreeting.salutation : `Welcome Back, ${greetingName}!`}</span>
+              </h1>
+
+              <p className="text-xs sm:text-sm text-slate-300 max-w-xl leading-relaxed">
+                {isToday
+                  ? timeGreeting.subtitle
+                  : `Reviewing your nutritional intake and logged meals for ${formatDisplayDate(selectedDate, todayDate)}.`}
+              </p>
             </div>
           </div>
-          <div className="bg-white border border-indigo-200 px-3.5 py-2 rounded-xl flex items-center gap-2.5 shadow-sm">
-            <span className="text-xl">💪</span>
-            <div>
-              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Protein Left</div>
-              <div className="text-sm sm:text-base font-extrabold text-indigo-700">{fmt(remainingProtein)}g</div>
+
+          {/* Right: Quick Snapshot Stats Pills */}
+          <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 shrink-0">
+            {/* Remaining Calories Pill */}
+            <div className="px-3.5 py-2 rounded-2xl bg-slate-900/90 border border-emerald-500/35 backdrop-blur flex items-center gap-2.5 shadow-inner">
+              <span className="text-2xl">🔥</span>
+              <div>
+                <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                  {isToday ? "Remaining Budget" : "Remaining"}
+                </div>
+                <div className="text-sm sm:text-base font-black text-emerald-400">
+                  {fmt(remainingKcal)} <span className="text-xs font-semibold text-slate-400">kcal</span>
+                </div>
+              </div>
             </div>
-          </div>
-          <div className="bg-white border border-sky-200 px-3.5 py-2 rounded-xl flex items-center gap-2.5 shadow-sm">
-            <span className="text-xl">💧</span>
-            <div>
-              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Water Left</div>
-              <div className="text-sm sm:text-base font-extrabold text-sky-700">{remainingLitres}L</div>
+
+            {/* Protein Left Pill */}
+            <div className="px-3.5 py-2 rounded-2xl bg-slate-900/90 border border-indigo-500/35 backdrop-blur flex items-center gap-2.5 shadow-inner">
+              <span className="text-2xl">💪</span>
+              <div>
+                <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                  Protein Needed
+                </div>
+                <div className="text-sm sm:text-base font-black text-indigo-400">
+                  {fmt(remainingProtein)} <span className="text-xs font-semibold text-slate-400">g</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Water Left Pill */}
+            <div className="px-3.5 py-2 rounded-2xl bg-slate-900/90 border border-sky-500/35 backdrop-blur flex items-center gap-2.5 shadow-inner">
+              <span className="text-2xl">💧</span>
+              <div>
+                <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                  Water Remaining
+                </div>
+                <div className="text-sm sm:text-base font-black text-sky-400">
+                  {remainingLitres} <span className="text-xs font-semibold text-slate-400">L</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
