@@ -1,0 +1,8 @@
+# robots.txt for NutriScan AI
+User-agent: *
+Allow: /
+Allow: /samples/
+Disallow: /api/
+
+# Sitemap index
+Sitemap: https://nutriscanai.com/sitemap.xml

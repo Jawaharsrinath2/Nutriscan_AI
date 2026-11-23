@@ -89,29 +89,39 @@ const SAMPLE_PLATES = [
 /* ── FAQ items ─────────────────────────────────────────────────────────── */
 const FAQS = [
   {
-    question: "How does NutriScan AI detect the food on my plate?",
+    question: "How does NutriScan AI detect calories and macros from food photos?",
     answer:
-      "NutriScan AI utilizes Google's Gemini 3.6 Flash multimodal vision model (with automatic fallback to high-speed YOLO models) trained on food photography. The AI detects discrete dish items, recognizes ingredients, and estimates visual volume to recommend weight in grams.",
+      "NutriScan AI utilizes Google's state-of-the-art Gemini 3.6 Flash multimodal vision model (with local YOLO intelligence fallback). The AI detects distinct dish items on your plate, estimates visual portion volumes, and calculates exact calories, protein, carbs, healthy fats, and dietary fiber using verified nutritional data.",
   },
   {
-    question: "Can I adjust ingredients or portion weights if detection isn't exact?",
+    question: "Can I log my meals hands-free by speaking with Voice Log?",
     answer:
-      "Yes! You have full interactive control. Once a photo is scanned, each detected ingredient is listed with individual portion sliders. You can add extra ingredients, scale portions (0.5x, 1x, 1.5x, 2x), or tap 'Auto-Fit' to let the AI automatically scale the meal to your exact remaining daily calories.",
+      "Yes! With the AI Voice Meal Logger, you can simply tap the microphone and speak naturally in English, Tamil, or Tanglish (e.g. 'Morning 3 idlis, sambar, and 1 boiled egg'). Gemini understands regional food vocabulary, estimates realistic grams, and logs directly into your daily tracker in seconds.",
   },
   {
-    question: "Does it support regional and Indian dishes like Thalis, Dals, and Dosas?",
+    question: "How does the Restaurant Menu Decider work with Zomato, Swiggy, and paper menus?",
     answer:
-      "Absolutely. NutriScan AI was built specifically with deep support for Indian and South Asian cuisines (Idli, Dosa, Paneer dishes, Thalis, Biryani, Dal) as well as global healthy staples (Quinoa bowls, Salads, Oatmeal, Grilled meats).",
+      "Before ordering food at a restaurant or on delivery apps like Swiggy and Zomato, snap or upload the menu card. NutriScan AI analyzes each dish and gives you instant traffic-light verdicts: Green (Best Fit for your goals), Yellow (Moderate / Share), and Red (Target Breakers) based on your remaining daily calories and protein.",
   },
   {
-    question: "How do the attempt limits and security work?",
+    question: "Does NutriScan AI support Indian, South Indian, and regional cuisines?",
     answer:
-      "Your account is protected by enterprise-grade security: bcrypt password hashing, JWT bearer tokens, IP-based rate limiting against spam/brute-force attacks, and automatic 15-minute account lockout after 5 consecutive failed login attempts.",
+      "Absolutely. NutriScan AI was built specifically with deep expertise in Indian, South Indian, and regional foods (Idli, Dosa, Sambar, Chicken Biryani, Paneer Thali, Dal Tadka, Roti, Chana Sundal, Fish Curry) alongside global healthy staples like Quinoa bowls, Oatmeal, and Grilled Chicken salads.",
   },
   {
-    question: "Can I sign in using my Google account?",
+    question: "Can I adjust ingredients, portion weights, or auto-fit meals to my calorie budget?",
     answer:
-      "Yes! One-click Google OAuth is built directly into NutriScan AI using Google Identity Services. You can sign up or sign in instantly with any verified Google account without remembering another password.",
+      "Yes! You have complete interactive control. Detected ingredients include portion sliders, multiplier chips (0.5x, 1x, 1.5x, 2x), and a 1-tap 'Auto-Fit' button that automatically scales your dish portions to fit your exact remaining daily calorie and macro budget.",
+  },
+  {
+    question: "How does the Packaged Food Audit detect harmful additives and ultra-processed ingredients?",
+    answer:
+      "Simply snap a photo of any packaged food product's ingredient list and nutrition table. NutriScan AI scans for hidden added sugars, trans fats, palm oil, artificial emulsifiers, and ultra-processed food (UPF) NOVA classifications with clear health hazard alerts.",
+  },
+  {
+    question: "Is NutriScan AI free to use, and how is my personal health data secured?",
+    answer:
+      "Yes, NutriScan AI is 100% free to get started with no credit card required. Your data is protected by enterprise-grade security including bcrypt password hashing, JWT authentication tokens, rate limiting against brute-force attacks, and secure Google OAuth integration.",
   },
 ];
 
@@ -128,8 +138,8 @@ export default function LandingView({ onGetStarted, onSignIn, isAuthenticated, o
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-emerald-500 selection:text-white">
       {/* ── Sticky Top Navbar ─────────────────────────────────────────── */}
-      <nav className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200">
+        <nav aria-label="Main Navigation" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white shadow-sm">
@@ -150,9 +160,10 @@ export default function LandingView({ onGetStarted, onSignIn, isAuthenticated, o
           </div>
 
           {/* Desktop Nav Links */}
-          <div className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
+          <div className="hidden md:flex items-center gap-7 text-sm font-semibold text-slate-600">
             <a href="#how-it-works" className="hover:text-emerald-600 transition">How It Works</a>
-            <a href="#demo" className="hover:text-emerald-600 transition">Interactive Demo</a>
+            <a href="#ai-tools" className="hover:text-emerald-600 transition">AI Tools</a>
+            <a href="#demo" className="hover:text-emerald-600 transition">Live Demo</a>
             <a href="#features" className="hover:text-emerald-600 transition">Features</a>
             <a href="#diet-plans" className="hover:text-emerald-600 transition">Diet Plans</a>
             <a href="#faq" className="hover:text-emerald-600 transition">FAQ</a>
@@ -194,6 +205,7 @@ export default function LandingView({ onGetStarted, onSignIn, isAuthenticated, o
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+              aria-label="Toggle mobile menu"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 {mobileMenuOpen ? (
@@ -204,13 +216,14 @@ export default function LandingView({ onGetStarted, onSignIn, isAuthenticated, o
               </svg>
             </button>
           </div>
-        </div>
+        </nav>
 
         {/* Mobile dropdown */}
         {mobileMenuOpen && (
           <div className="sm:hidden px-4 pt-2 pb-4 bg-white border-b border-slate-200 space-y-2">
             <a href="#how-it-works" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm font-medium text-slate-700">How It Works</a>
-            <a href="#demo" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm font-medium text-slate-700">Interactive Demo</a>
+            <a href="#ai-tools" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm font-medium text-slate-700">AI Tools</a>
+            <a href="#demo" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm font-medium text-slate-700">Live Demo</a>
             <a href="#features" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm font-medium text-slate-700">Features</a>
             <a href="#diet-plans" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm font-medium text-slate-700">Diet Plans</a>
             <a href="#faq" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm font-medium text-slate-700">FAQ</a>
@@ -244,8 +257,9 @@ export default function LandingView({ onGetStarted, onSignIn, isAuthenticated, o
             </div>
           </div>
         )}
-      </nav>
+      </header>
 
+      <main className="flex-1">
       {/* ── Hero Section ──────────────────────────────────────────────── */}
       <section className="relative overflow-hidden pt-12 pb-20 md:pt-20 md:pb-32 bg-gradient-to-b from-emerald-50/60 via-slate-50 to-white">
         {/* Glow background accents */}
@@ -261,14 +275,14 @@ export default function LandingView({ onGetStarted, onSignIn, isAuthenticated, o
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.15]">
-                Know What’s On Your Plate{" "}
-                <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-                  Before You Take A Bite
+                AI-Powered Nutrition Tracker:{" "}
+                <span className="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-700 bg-clip-text text-transparent">
+                  Know What’s On Your Plate Before You Eat
                 </span>
               </h1>
 
               <p className="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto lg:mx-0 font-normal leading-relaxed">
-                Snap or upload any meal. NutriScan AI recognizes discrete ingredients, estimates weights, computes real-time macros, and validates plate fit against your personal diet targets.
+                Snap meal photos, log food with natural voice, or audit restaurant menus. Powered by Google Gemini Vision to calculate exact calories, protein, and macros for Indian &amp; global dishes in seconds.
               </p>
 
               {/* CTAs */}
@@ -297,12 +311,12 @@ export default function LandingView({ onGetStarted, onSignIn, isAuthenticated, o
                   <div className="text-xs text-slate-500 font-medium">Vision Accuracy</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-extrabold text-teal-700">50+</div>
+                  <div className="text-2xl font-extrabold text-teal-700">100+</div>
                   <div className="text-xs text-slate-500 font-medium">Verified Dishes</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-extrabold text-indigo-700">Instant</div>
-                  <div className="text-xs text-slate-500 font-medium">Macro Auto-Fit</div>
+                  <div className="text-2xl font-extrabold text-cyan-700">5-in-1</div>
+                  <div className="text-xs text-slate-500 font-medium">AI Nutrition Suite</div>
                 </div>
               </div>
             </div>
@@ -314,7 +328,7 @@ export default function LandingView({ onGetStarted, onSignIn, isAuthenticated, o
                 <div className="relative aspect-[4/3] bg-slate-900 overflow-hidden">
                   <img
                     src="/samples/chicken_quinoa_bowl.jpg"
-                    alt="Sample Scanned Meal"
+                    alt="NutriScan AI food scanner analyzing Grilled Chicken Quinoa Bowl ingredients, grams, calories, and macros"
                     className="w-full h-full object-cover"
                   />
                   {/* Scanner overlay beam */}
@@ -433,6 +447,173 @@ export default function LandingView({ onGetStarted, onSignIn, isAuthenticated, o
         </div>
       </section>
 
+      {/* ── Flagship AI Tools Suite Section ──────────────────────────── */}
+      <section id="ai-tools" className="py-20 bg-slate-50 border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
+            <h2 className="text-xs font-bold uppercase tracking-wider text-emerald-600">Complete AI Health Ecosystem</h2>
+            <h3 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+              5 Intelligent AI Tools To Master Your Daily Nutrition
+            </h3>
+            <p className="text-slate-600 text-base">
+              From snapping home-cooked meals and speaking dishes with natural voice to evaluating restaurant menus and packaged snacks.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* Tool 1: Pre-Meal Food Photo Scanner */}
+            <div className="bg-white rounded-3xl p-7 border border-slate-200 hover:border-emerald-400 hover:shadow-xl transition-all flex flex-col justify-between group">
+              <div className="space-y-4">
+                <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center text-2xl font-black group-hover:scale-110 transition-transform">
+                  📸
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                    Multimodal Vision
+                  </span>
+                  <span className="text-[10px] font-bold text-slate-400">Gemini 3.6 Flash</span>
+                </div>
+                <h4 className="text-xl font-extrabold text-slate-900 group-hover:text-emerald-700 transition-colors">
+                  Pre-Meal Photo Scanner
+                </h4>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  Snap any home-cooked plate, thali, or snack. The AI identifies discrete ingredients, recognizes culinary portions, and calculates exact calories, protein, and macros before your first bite.
+                </p>
+              </div>
+              <div className="pt-6 border-t border-slate-100 mt-6 flex items-center justify-between text-xs font-bold text-emerald-700">
+                <span>Food Volume &amp; Gram Estimation</span>
+                <span>→</span>
+              </div>
+            </div>
+
+            {/* Tool 2: Voice Meal Logger */}
+            <div className="bg-white rounded-3xl p-7 border border-slate-200 hover:border-teal-400 hover:shadow-xl transition-all flex flex-col justify-between group">
+              <div className="space-y-4">
+                <div className="w-14 h-14 rounded-2xl bg-teal-500/10 text-teal-600 flex items-center justify-center text-2xl font-black group-hover:scale-110 transition-transform">
+                  🎙️
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-teal-100 text-teal-800">
+                    Hands-Free Voice NLP
+                  </span>
+                  <span className="text-[10px] font-bold text-slate-400">English • Tamil • Tanglish</span>
+                </div>
+                <h4 className="text-xl font-extrabold text-slate-900 group-hover:text-teal-700 transition-colors">
+                  Multilingual Voice Meal Logger
+                </h4>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  No tedious manual typing. Tap the microphone and describe your meal naturally (e.g. &ldquo;2 chapati with dal and curd&rdquo; or &ldquo;Kaalaila 3 idli, sambar&rdquo;). Gemini logs portions into your diary instantly.
+                </p>
+              </div>
+              <div className="pt-6 border-t border-slate-100 mt-6 flex items-center justify-between text-xs font-bold text-teal-700">
+                <span>Fast 10-Second Diary Logging</span>
+                <span>→</span>
+              </div>
+            </div>
+
+            {/* Tool 3: Restaurant Menu Decider */}
+            <div className="bg-white rounded-3xl p-7 border border-slate-200 hover:border-cyan-400 hover:shadow-xl transition-all flex flex-col justify-between group">
+              <div className="space-y-4">
+                <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 text-cyan-600 flex items-center justify-center text-2xl font-black group-hover:scale-110 transition-transform">
+                  🍽️
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-cyan-100 text-cyan-800">
+                    Smart Pre-Order Guide
+                  </span>
+                  <span className="text-[10px] font-bold text-slate-400">Zomato • Swiggy • Dine-In</span>
+                </div>
+                <h4 className="text-xl font-extrabold text-slate-900 group-hover:text-cyan-700 transition-colors">
+                  Restaurant Menu Decider
+                </h4>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  Upload any restaurant menu card or food delivery screenshot. NutriScan AI grades every dish with instant 🟢 Green (Best Fit), 🟡 Yellow (Moderate), and 🔴 Red (Target Breakers) verdicts matching your remaining daily calories.
+                </p>
+              </div>
+              <div className="pt-6 border-t border-slate-100 mt-6 flex items-center justify-between text-xs font-bold text-cyan-700">
+                <span>Eat Out Without Derailing Goals</span>
+                <span>→</span>
+              </div>
+            </div>
+
+            {/* Tool 4: 24/7 AI Nutritionist Coach */}
+            <div className="bg-white rounded-3xl p-7 border border-slate-200 hover:border-emerald-400 hover:shadow-xl transition-all flex flex-col justify-between group">
+              <div className="space-y-4">
+                <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center text-2xl font-black group-hover:scale-110 transition-transform">
+                  🤖
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">
+                    24/7 Live Intelligence
+                  </span>
+                  <span className="text-[10px] font-bold text-slate-400">Context-Aware</span>
+                </div>
+                <h4 className="text-xl font-extrabold text-slate-900 group-hover:text-emerald-700 transition-colors">
+                  24/7 Personal AI Nutritionist
+                </h4>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  Need a late-night snack idea or high-protein dinner option? Your AI Coach knows your exact consumed macros, remaining calories, and logged meals today to deliver personalized, actionable diet advice.
+                </p>
+              </div>
+              <div className="pt-6 border-t border-slate-100 mt-6 flex items-center justify-between text-xs font-bold text-emerald-700">
+                <span>Personalized Cravings &amp; Swaps</span>
+                <span>→</span>
+              </div>
+            </div>
+
+            {/* Tool 5: Packaged Food Ingredient Audit */}
+            <div className="bg-white rounded-3xl p-7 border border-slate-200 hover:border-indigo-400 hover:shadow-xl transition-all flex flex-col justify-between group">
+              <div className="space-y-4">
+                <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 text-indigo-600 flex items-center justify-center text-2xl font-black group-hover:scale-110 transition-transform">
+                  📦
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800">
+                    Ingredient Label OCR
+                  </span>
+                  <span className="text-[10px] font-bold text-slate-400">UPF &amp; Sugar Audit</span>
+                </div>
+                <h4 className="text-xl font-extrabold text-slate-900 group-hover:text-indigo-700 transition-colors">
+                  Packaged Food Health Audit
+                </h4>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  Scan packaged food labels to unmask hidden added sugars, industrial seed oils, palm oil, artificial emulsifiers, and NOVA ultra-processed food (UPF) classifications with clear health risk ratings.
+                </p>
+              </div>
+              <div className="pt-6 border-t border-slate-100 mt-6 flex items-center justify-between text-xs font-bold text-indigo-700">
+                <span>Spot Hidden Food Hazards</span>
+                <span>→</span>
+              </div>
+            </div>
+
+            {/* Tool 6: 1-Tap Auto-Fit & Daily Tracker */}
+            <div className="bg-white rounded-3xl p-7 border border-slate-200 hover:border-amber-400 hover:shadow-xl transition-all flex flex-col justify-between group">
+              <div className="space-y-4">
+                <div className="w-14 h-14 rounded-2xl bg-amber-500/10 text-amber-600 flex items-center justify-center text-2xl font-black group-hover:scale-110 transition-transform">
+                  🎯
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">
+                    Smart Portion Control
+                  </span>
+                  <span className="text-[10px] font-bold text-slate-400">One-Tap Rebalance</span>
+                </div>
+                <h4 className="text-xl font-extrabold text-slate-900 group-hover:text-amber-700 transition-colors">
+                  One-Tap Auto-Fit &amp; Tracker
+                </h4>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  Have 400 kcal left for dinner? Tap Auto-Fit and NutriScan re-portions your plate ingredients automatically to hit your exact calorie and protein goals without guessing.
+                </p>
+              </div>
+              <div className="pt-6 border-t border-slate-100 mt-6 flex items-center justify-between text-xs font-bold text-amber-700">
+                <span>Zero Guesswork Macro Balance</span>
+                <span>→</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── Interactive Demo Showcase ─────────────────────────────────── */}
       <section id="demo" className="py-20 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -470,7 +651,8 @@ export default function LandingView({ onGetStarted, onSignIn, isAuthenticated, o
             <div className="md:col-span-6 relative aspect-square sm:aspect-auto">
               <img
                 src={selectedPlate.image}
-                alt={selectedPlate.title}
+                alt={`NutriScan AI calorie counter analyzing ${selectedPlate.title}`}
+                loading="lazy"
                 className="w-full h-full object-cover"
               />
               <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-full text-white text-xs font-bold border border-white/20">
@@ -797,24 +979,36 @@ export default function LandingView({ onGetStarted, onSignIn, isAuthenticated, o
           </div>
         </div>
       </section>
+      </main>
 
       {/* ── Footer ────────────────────────────────────────────────────── */}
       <footer className="bg-slate-900 text-slate-400 py-12 text-sm border-t border-slate-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center text-white font-bold text-sm">
-              N
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6 pb-8 border-b border-slate-800">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-black text-base shadow-sm">
+                N
+              </div>
+              <div>
+                <span className="text-white font-black text-lg tracking-tight">NutriScan <span className="text-emerald-400">AI</span></span>
+                <p className="text-xs text-slate-400">Smart Pre-Meal Food Photo Analyzer, Voice Logger &amp; AI Diet Assistant</p>
+              </div>
             </div>
-            <span className="text-white font-bold text-base">NutriScan AI</span>
-            <span className="text-xs text-slate-500">© 2026. All rights reserved.</span>
+
+            <div className="flex flex-wrap items-center gap-6 text-xs text-slate-400 font-semibold">
+              <a href="#how-it-works" className="hover:text-emerald-400 transition">How It Works</a>
+              <a href="#ai-tools" className="hover:text-emerald-400 transition">AI Tools</a>
+              <a href="#demo" className="hover:text-emerald-400 transition">Live Demo</a>
+              <a href="#features" className="hover:text-emerald-400 transition">Features</a>
+              <a href="#diet-plans" className="hover:text-emerald-400 transition">Diet Plans</a>
+              <a href="#faq" className="hover:text-emerald-400 transition">FAQ</a>
+              <button type="button" onClick={onSignIn} className="hover:text-emerald-400 transition">Sign In</button>
+            </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-6 text-xs text-slate-400">
-            <a href="#how-it-works" className="hover:text-white transition">How It Works</a>
-            <a href="#features" className="hover:text-white transition">Features</a>
-            <a href="#diet-plans" className="hover:text-white transition">Diet Plans</a>
-            <a href="#faq" className="hover:text-white transition">FAQ</a>
-            <button type="button" onClick={onSignIn} className="hover:text-white transition">Sign In</button>
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+            <p>© 2026 NutriScan AI. All rights reserved. Powered by Google Gemini Multimodal Vision.</p>
+            <p>Built for healthy living in India &amp; worldwide.</p>
           </div>
         </div>
       </footer>
