@@ -138,7 +138,7 @@ export default function NutritionistChatDrawer() {
                 <span className="w-2 h-2 rounded-full bg-emerald-300 animate-pulse" />
               </div>
               <div className="text-[10px] text-emerald-100 font-medium">
-                24/7 Tanglish Coach
+                24/7 AI Coach
               </div>
             </div>
           </button>
@@ -176,18 +176,6 @@ export default function NutritionistChatDrawer() {
             </div>
 
             <div className="flex items-center gap-2">
-              {/* Language Switch */}
-              <button
-                type="button"
-                onClick={() =>
-                  setLanguage((l) => (l === "tanglish" ? "english" : "tanglish"))
-                }
-                className="px-2 py-0.5 rounded-lg bg-white/20 hover:bg-white/30 text-[10px] font-extrabold uppercase transition tracking-wider"
-                title="Switch response language"
-              >
-                {language === "tanglish" ? "Tanglish" : "English"}
-              </button>
-
               {/* Close Button */}
               <button
                 type="button"
@@ -297,7 +285,7 @@ export default function NutritionistChatDrawer() {
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Ask in Tanglish... (e.g. Night enna sapdalum?)"
+                placeholder="Ask anything... (e.g. Night enna sapdalum? or high protein snacks)"
                 disabled={sending}
                 className="flex-1 px-3 py-1.5 bg-transparent text-xs text-slate-800 placeholder-slate-400 outline-none"
               />

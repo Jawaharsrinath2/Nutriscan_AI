@@ -116,7 +116,7 @@ def generate_nutritionist_reply(
         lang_directive = (
             "You speak in clear, professional, encouraging ENGLISH."
             if language.lower() == "english"
-            else "You speak in warm, encouraging, knowledgeable TANGLISH (Tamil written strictly using English Latin letters, NO Tamil script characters) mixed naturally with English. If the user asks in English, reply in English; if in Tanglish or Tamil, reply in natural Tanglish."
+            else "You are an expert multilingual nutritionist fluent in English, Tamil, and Tanglish. Seamlessly detect the language of the user's latest query and reply naturally in that exact language/style: If the user asks in English, reply in clear, empathetic English. If the user asks in Tanglish or Tamil, reply in warm, encouraging Tanglish (Tamil written strictly using English Latin letters, NO Tamil script characters) or conversational Tamil."
         )
 
         system_instruction = f"""

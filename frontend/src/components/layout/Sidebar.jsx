@@ -147,7 +147,7 @@ export default function Sidebar({
           })}
         </div>
 
-        {/* Tanglish Voice Meal Logger Quick Button */}
+        {/* Voice Meal Logger Quick Button */}
         {onOpenVoiceLog && (
           <div className="px-3 pt-1">
             <button
@@ -159,13 +159,13 @@ export default function Sidebar({
               className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600/25 to-teal-600/15 hover:from-emerald-600/40 hover:to-teal-600/30 border border-emerald-500/35 text-emerald-300 hover:text-white text-xs font-bold transition shadow-2xs group ${
                 collapsed ? "justify-center px-2" : ""
               }`}
-              title="Tanglish Voice Meal Logger"
+              title="Voice Meal Logger"
             >
               <span className="text-base shrink-0 group-hover:scale-110 transition-transform">
                 🎙️
               </span>
               {!collapsed && (
-                <span className="flex-1 text-left truncate">Tanglish Voice Log</span>
+                <span className="flex-1 text-left truncate">Voice Log</span>
               )}
               {!collapsed && (
                 <span className="text-[10px] font-extrabold px-1.5 py-0.5 rounded bg-emerald-400 text-emerald-950">

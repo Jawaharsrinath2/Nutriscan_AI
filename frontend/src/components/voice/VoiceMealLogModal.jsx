@@ -207,7 +207,7 @@ export default function VoiceMealLogModal({ isOpen, onClose }) {
     setConfirmSuccess(null);
 
     const payload = {
-      title: mealTitle || "Tanglish Voice Meal",
+      title: mealTitle || "Voice Meal",
       slot: selectedSlot,
       items: editableItems,
       kcal: currentTotals.kcal,
@@ -252,14 +252,14 @@ export default function VoiceMealLogModal({ isOpen, onClose }) {
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-lg font-black tracking-tight">
-                  Tanglish Voice Meal Logger
+                  Voice Meal Logger
                 </h2>
                 <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-amber-400 text-amber-950 tracking-wider">
                   AI Voice NLP
                 </span>
               </div>
               <p className="text-xs text-emerald-100">
-                Speak naturally in Tanglish, Tamil or English — Gemini will parse portions & macros
+                Speak naturally in English, Tamil, or Tanglish — Gemini will parse portions & macros
               </p>
             </div>
           </div>
@@ -360,11 +360,11 @@ export default function VoiceMealLogModal({ isOpen, onClose }) {
                 <div className="space-y-1">
                   <p className="text-sm font-bold text-white">
                     {isListening
-                      ? "Listening... Speak naturally in Tanglish"
+                      ? "Listening... Speak naturally in English, Tamil, or Tanglish"
                       : "Tap mic to speak or type in the box below"}
                   </p>
                   <p className="text-xs text-slate-400">
-                    e.g. &ldquo;Kaalaila 3 idli, oru cup sambar, aprm filter coffee saapten&rdquo;
+                    e.g. &ldquo;Kaalaila 3 idli, oru cup sambar, aprm filter coffee saapten&rdquo; or &ldquo;2 rotis with chicken curry&rdquo;
                   </p>
                 </div>
 
@@ -380,7 +380,7 @@ export default function VoiceMealLogModal({ isOpen, onClose }) {
                         : "bg-slate-700 text-slate-300 hover:bg-slate-600"
                     }`}
                   >
-                    Tanglish / Indian English (en-IN)
+                    English / Tanglish (en-IN)
                   </button>
                   <button
                     type="button"
@@ -425,12 +425,12 @@ export default function VoiceMealLogModal({ isOpen, onClose }) {
                 />
               </div>
 
-              {/* 1-Click Tanglish Sample Chips */}
+              {/* 1-Click Sample Chips */}
               {samples.length > 0 && (
                 <div className="space-y-2">
                   <div className="flex items-center gap-1.5 text-xs font-bold text-slate-600">
                     <span>⚡</span>
-                    <span>Quick 1-Click Tanglish Test Samples:</span>
+                    <span>Quick 1-Click Test Samples:</span>
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {samples.map((s, idx) => (
@@ -476,11 +476,11 @@ export default function VoiceMealLogModal({ isOpen, onClose }) {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
                     </svg>
-                    <span>Parsing Tanglish Speech with Gemini AI...</span>
+                    <span>Parsing Voice Speech with Gemini AI...</span>
                   </>
                 ) : (
                   <>
-                    <span>🤖 Analyze & Parse Tanglish Meal</span>
+                    <span>🤖 Analyze & Parse Voice Meal</span>
                     <span>→</span>
                   </>
                 )}

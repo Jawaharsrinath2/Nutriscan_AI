@@ -8,7 +8,7 @@ export default function ScannerView() {
   const { camera, openVoiceLog } = useOutletContext();
   return (
     <section className="space-y-6">
-      {/* Quick Tanglish Voice CTA Banner */}
+      {/* Quick Voice Log CTA Banner */}
       {openVoiceLog && (
         <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-700 text-white rounded-2xl p-4 sm:p-5 flex flex-wrap items-center justify-between gap-4 shadow-md">
           <div className="flex items-center gap-3">
@@ -25,7 +25,7 @@ export default function ScannerView() {
                 </span>
               </div>
               <p className="text-xs text-emerald-100">
-                Log meals in seconds by speaking in Tanglish (e.g. &ldquo;Kaalaila 3 idli, sambar, coffee saapten&rdquo;)
+                Log meals in seconds by speaking in English, Tamil, or Tanglish (e.g. &ldquo;2 chapati with dal&rdquo; or &ldquo;3 idli, sambar&rdquo;)
               </p>
             </div>
           </div>
@@ -36,7 +36,7 @@ export default function ScannerView() {
             className="px-4 py-2 rounded-xl bg-white hover:bg-emerald-50 text-emerald-800 font-extrabold text-xs transition shadow-sm flex items-center gap-1.5 shrink-0 active:scale-95"
           >
             <span>🎙️</span>
-            <span>Open Tanglish Voice Log →</span>
+            <span>Open Voice Log →</span>
           </button>
         </div>
       )}

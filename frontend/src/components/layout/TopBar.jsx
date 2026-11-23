@@ -103,13 +103,13 @@ export default function TopBar({ onOpenMobile, onOpenVoiceLog }) {
             </div>
           )}
 
-          {/* Quick Tanglish Voice Log Button */}
+          {/* Quick Voice Log Button */}
           {onOpenVoiceLog && (
             <button
               type="button"
               onClick={onOpenVoiceLog}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold shadow-sm transition active:scale-95"
-              title="Log meal instantly with Tanglish voice"
+              title="Log meal instantly with voice"
             >
               <span className="text-sm">🎙️</span>
               <span className="hidden sm:inline">Voice Log</span>
